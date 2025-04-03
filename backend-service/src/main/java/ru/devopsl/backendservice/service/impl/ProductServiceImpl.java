@@ -8,6 +8,10 @@ import ru.devopsl.backendservice.payload.response.MessageResponse;
 import ru.devopsl.backendservice.payload.response.ProductResponse;
 import ru.devopsl.backendservice.repository.ProductRepository;
 import ru.devopsl.backendservice.service.ProductService;
+import ru.devopsl.backendservice.websocket.WebSocketHandler;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -21,6 +25,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public MessageResponse addProduct(ProductRequest productRequest) {
         productRepository.save(ProductMapper.mapToProduct(productRequest));
+
         return new MessageResponse("Product has been successfully added");
     }
 
@@ -62,5 +67,10 @@ public class ProductServiceImpl implements ProductService {
         );
 
         return ProductMapper.mapToProductResponse(product);
+    }
+
+    @Override
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream().map(ProductMapper::mapToProductResponse).collect(Collectors.toList());
     }
 }

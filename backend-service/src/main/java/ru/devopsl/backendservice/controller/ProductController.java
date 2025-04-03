@@ -1,9 +1,10 @@
 package ru.devopsl.backendservice.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.devopsl.backendservice.model.Product;
 import ru.devopsl.backendservice.payload.request.ProductRequest;
 import ru.devopsl.backendservice.payload.response.MessageResponse;
 import ru.devopsl.backendservice.payload.response.ProductResponse;
@@ -14,6 +15,7 @@ import ru.devopsl.backendservice.service.ProductService;
 @RequestMapping("/api/product")
 public class ProductController {
     private final ProductService productService;
+    private final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     public ProductController(ProductService productService) {
         this.productService = productService;
@@ -21,6 +23,7 @@ public class ProductController {
 
     @PostMapping("/add")
     public ResponseEntity<MessageResponse> addProduct(@RequestBody ProductRequest productRequest) {
+        logger.info("POST [/api/product/add] | Request received to add a new product");
         try {
             return new ResponseEntity<>(productService.addProduct(productRequest), HttpStatus.CREATED);
         } catch (Exception e) {
@@ -30,9 +33,8 @@ public class ProductController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<MessageResponse> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+        logger.info("PUT [/api/product/update] | Request for product({}) change received", id);
         try {
-//            productService.updateProduct(id, productRequest);
-//            return ResponseEntity.ok(new MessageResponse("Product updated successfully"));
             return new ResponseEntity<>(productService.updateProduct(id, productRequest), HttpStatus.OK);
         }
 /*
@@ -49,6 +51,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+        logger.info("GET [/api/product/get] | Request for product({}) received", id);
         try {
             ProductResponse productResponse = productService.getProductById(id);
             return ResponseEntity.ok(productResponse);
@@ -65,9 +68,8 @@ public class ProductController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<MessageResponse> deleteProduct(@PathVariable Long id) {
+        logger.info("DELETE [/api/product/delete] | Request to remove product({}) received", id);
         try {
-//            productService.deleteProduct(id);
-//            return ResponseEntity.ok(new MessageResponse("Product deleted successfully"));
             return new ResponseEntity<>(productService.deleteProduct(id), HttpStatus.OK);
         }
 /*

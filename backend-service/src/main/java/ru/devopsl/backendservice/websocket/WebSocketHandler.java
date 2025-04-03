@@ -1,6 +1,8 @@
 package ru.devopsl.backendservice.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
+    private final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
     private static final Set<WebSocketSession> sessions = new CopyOnWriteArraySet<>();
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -48,6 +51,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             for (WebSocketSession session : sessions) {
                 if (session.isOpen()) {
                     session.sendMessage(new TextMessage(jsonResponse));
+                    logger.info("WEBSOCKET [sendProducts()] | List of all products sent");
                 }
             }
         } catch (Exception e) {

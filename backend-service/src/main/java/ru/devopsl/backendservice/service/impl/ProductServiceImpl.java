@@ -1,5 +1,7 @@
 package ru.devopsl.backendservice.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.devopsl.backendservice.mapper.ProductMapper;
 import ru.devopsl.backendservice.model.Product;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+    private final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     private final ProductRepository productRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -24,7 +27,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public MessageResponse addProduct(ProductRequest productRequest) {
-        productRepository.save(ProductMapper.mapToProduct(productRequest));
+        Product savedProduct = productRepository.save(ProductMapper.mapToProduct(productRequest));
+        logger.info("ADD [addProduct()] | Product({}) has been successfully added", savedProduct.getId());
 
         return new MessageResponse("Product has been successfully added");
     }
@@ -42,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setPrice(productRequest.getPrice());
 
         productRepository.save(existingProduct);
+        logger.info("UPDATE [updateProduct()] | Product({}) has been successfully updated", id);
 
         return new MessageResponse("Product has been successfully updated");
     }
@@ -55,6 +60,8 @@ public class ProductServiceImpl implements ProductService {
         );
 
         productRepository.delete(existingProduct);
+        logger.info("DELETE [deleteProduct()] | Product({}) has been successfully deleted", id);
+
         return new MessageResponse("Product has been successfully deleted");
     }
 
@@ -65,6 +72,7 @@ public class ProductServiceImpl implements ProductService {
                 () -> new ProductNotFoundException("Product not found")
                  */
         );
+        logger.info("GET [getProductById()] | Product({}) has been successfully retrieved]", id);
 
         return ProductMapper.mapToProductResponse(product);
     }

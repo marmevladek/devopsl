@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductResponse {
-    private UUID id;
+    private Long id;
     private String name;
     private String description;
     private float price;

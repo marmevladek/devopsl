@@ -1,0 +1,17 @@
+{
+  "name": "front-service",
+  "version": "0.0.1",
+  "description": "front sevice for devops lab",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "front"
+  ],
+  "author": "Admakin M. A.",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

@@ -21,9 +21,9 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/create")
     public ResponseEntity<MessageResponse> addProduct(@RequestBody ProductRequest productRequest) {
-        logger.info("POST [/api/product/add] | Request received to add a new product");
+        logger.info("POST [/api/product/create] | Request received to add a new product");
         try {
             return new ResponseEntity<>(productService.addProduct(productRequest), HttpStatus.CREATED);
         } catch (Exception e) {

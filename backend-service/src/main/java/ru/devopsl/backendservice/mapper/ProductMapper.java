@@ -10,10 +10,10 @@ public class ProductMapper {
 
     public static Product mapToProduct(ProductRequest productRequest) {
         return new Product(
-                productRequest.getName(),
-                productRequest.getDescription(),
-                productRequest.getPrice(),
-                productRequest.getCategory(),
+                productRequest.name(),
+                productRequest.description(),
+                productRequest.price(),
+                productRequest.category(),
                 LocalDateTime.now()
         );
     }

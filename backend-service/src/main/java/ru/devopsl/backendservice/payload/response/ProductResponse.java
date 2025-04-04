@@ -1,19 +1,15 @@
 package ru.devopsl.backendservice.payload.response;
 
-import lombok.*;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ProductResponse {
-    private Long id;
-    private String name;
-    private String description;
-    private float price;
-    private String category;
-    private LocalDateTime createdAt;
-}
+
+public record ProductResponse(
+        Long id,
+        String name,
+        String description,
+        float price,
+        String category,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        LocalDateTime createdAt
+) {}

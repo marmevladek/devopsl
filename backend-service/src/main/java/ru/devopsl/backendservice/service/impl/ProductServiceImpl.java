@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public MessageResponse addProduct(ProductRequest productRequest) {
         Product savedProduct = productRepository.save(ProductMapper.mapToProduct(productRequest));
-        logger.info("ADD [addProduct()] | Product({}) has been successfully added", savedProduct.getId());
+        logger.info("CREATE [addProduct()] | Product({}) has been successfully added", savedProduct.getId());
 
         return new MessageResponse("Product has been successfully added");
     }

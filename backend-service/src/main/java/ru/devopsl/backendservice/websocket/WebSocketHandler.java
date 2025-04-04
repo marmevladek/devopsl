@@ -20,7 +20,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class WebSocketHandler extends TextWebSocketHandler {
     private final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
     private static final Set<WebSocketSession> sessions = new CopyOnWriteArraySet<>();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private ProductService productService;

@@ -5,5 +5,5 @@ public record ProductRequest(
         String name,
         String description,
         float price,
-        String category
+        Long category_id
 ) {}

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -28,13 +30,15 @@ public class Product {
     @Column(name = "price")
     private float price;
 
-    @Column(name = "category")
-    private String category;
-
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
-    public Product(String name, String description, float price, String category, LocalDateTime createdAt) {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Category category;
+
+    public Product(String name, String description, float price, Category category,LocalDateTime createdAt) {
         this.name = name;
         this.description = description;
         this.price = price;

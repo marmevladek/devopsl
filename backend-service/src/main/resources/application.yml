@@ -1,0 +1,13 @@
+server:
+  port: 1000
+
+spring:
+  application:
+    name: BACKEND-SERVICE
+  datasource:
+    url: jdbc:postgresql://localhost:5432/devopsl-db
+    username: postgres
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update

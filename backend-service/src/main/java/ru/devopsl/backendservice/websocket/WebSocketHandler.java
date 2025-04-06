@@ -27,8 +27,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Autowired
     private ProductService productService;
 
-
-
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         sessions.add(session);

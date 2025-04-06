@@ -10,9 +10,9 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @EntityGraph(attributePaths = {"category"})
+    @EntityGraph(attributePaths = { "category" })
     List<Product> findAll();
 
-    @EntityGraph(attributePaths = {"category"})
+    @EntityGraph(attributePaths = { "category" })
     Optional<Product> findById(Long id);
 }

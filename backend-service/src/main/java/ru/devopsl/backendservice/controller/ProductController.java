@@ -32,18 +32,18 @@ public class ProductController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<MessageResponse> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<MessageResponse> updateProduct(@PathVariable Long id,
+            @RequestBody ProductRequest productRequest) {
         logger.info("PUT [/api/product/update] | Request for product({}) change received", id);
         try {
             return new ResponseEntity<>(productService.updateProduct(id, productRequest), HttpStatus.OK);
         }
-/*
-
-        catch (ProductNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Product not found"));
-        }
-
-*/
+        /*
+         *
+         * catch (ProductNotFoundException e) { return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new
+         * MessageResponse("Product not found")); }
+         *
+         */
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Error updating product"));
         }
@@ -58,12 +58,10 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-/*
-        catch (ProductNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-*/
+        /*
+         * catch (ProductNotFoundException e) { return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); }
+         *
+         */
     }
 
     @DeleteMapping("/delete/{id}")
@@ -72,18 +70,15 @@ public class ProductController {
         try {
             return new ResponseEntity<>(productService.deleteProduct(id), HttpStatus.OK);
         }
-/*
-
-        catch (ProductNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Product not found"));
-        }
-
-*/
+        /*
+         *
+         * catch (ProductNotFoundException e) { return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new
+         * MessageResponse("Product not found")); }
+         *
+         */
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Error deleting product"));
         }
     }
-
-
 
 }

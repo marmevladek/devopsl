@@ -38,7 +38,7 @@ public class Product {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
-    public Product(String name, String description, float price, Category category,LocalDateTime createdAt) {
+    public Product(String name, String description, float price, Category category, LocalDateTime createdAt) {
         this.name = name;
         this.description = description;
         this.price = price;

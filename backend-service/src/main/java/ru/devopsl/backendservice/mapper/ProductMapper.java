@@ -10,23 +10,12 @@ import java.time.LocalDateTime;
 public class ProductMapper {
 
     public static Product mapToProduct(ProductRequest productRequest, Category category) {
-        return new Product(
-                productRequest.name(),
-                productRequest.description(),
-                productRequest.price(),
-                category,
-                LocalDateTime.now()
-        );
+        return new Product(productRequest.name(), productRequest.description(), productRequest.price(), category,
+                LocalDateTime.now());
     }
 
     public static ProductResponse mapToProductResponse(Product product, String categoryName) {
-        return new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                categoryName,
-                product.getCreatedAt()
-        );
+        return new ProductResponse(product.getId(), product.getName(), product.getDescription(), product.getPrice(),
+                categoryName, product.getCreatedAt());
     }
 }

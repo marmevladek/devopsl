@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface CategoryService {
     MessageResponse createCategory(Category category);
+
     List<CategoryResponse> getAllCategories();
 }

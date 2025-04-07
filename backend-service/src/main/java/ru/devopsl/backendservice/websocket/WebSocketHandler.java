@@ -26,6 +26,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final ProductService productService;
     private final ObjectMapper objectMapper;
 
+  
     public WebSocketHandler(ProductService productService, ObjectMapper objectMapper) {
         this.productService = productService;
         this.objectMapper = objectMapper;

@@ -30,7 +30,6 @@ public class ProductServiceImpl implements ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-
     @Override
     public MessageResponse addProduct(ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.category_id())
@@ -46,9 +45,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public MessageResponse updateProduct(Long id, ProductRequest productRequest) {
         Product existingProduct = productRepository.findById(id).orElseThrow(
-                /*
-                () -> new ProductNotFoundException("Product not found")
-                 */
+        /*
+         * () -> new ProductNotFoundException("Product not found")
+         */
         );
 
         Category category = categoryRepository.findById(productRequest.category_id()).orElseThrow();
@@ -67,9 +66,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public MessageResponse deleteProduct(Long id) {
         Product existingProduct = productRepository.findById(id).orElseThrow(
-                /*
-                () -> new ProductNotFoundException("Product not found")
-                 */
+        /*
+         * () -> new ProductNotFoundException("Product not found")
+         */
         );
 
         productRepository.delete(existingProduct);
@@ -81,9 +80,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(
-                /*
-                () -> new ProductNotFoundException("Product not found")
-                 */
+        /*
+         * () -> new ProductNotFoundException("Product not found")
+         */
         );
         logger.info("GET [getProductById()] | Product({}) has been successfully retrieved]", id);
         String categoryName = product.getCategory().getName();

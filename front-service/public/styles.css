@@ -1,0 +1,31 @@
+body {
+    margin: 0px;
+}
+
+.container {
+    display: grid;
+    grid-template-areas:
+      "header header"
+      "menu content-container"
+      "footer footer";
+    grid-template-columns: 1fr 8fr;
+  }
+
+  .container > div {
+    padding: 10px;
+  }
+
+  .container > div.header {
+    grid-area: header;
+    text-align: center;
+    background-color: darkgray;
+  }
+
+  .container > div.menu {
+    grid-area: menu;
+    text-align: center;
+  }
+
+  .container > div.content-container {
+    grid-area: content;
+  }

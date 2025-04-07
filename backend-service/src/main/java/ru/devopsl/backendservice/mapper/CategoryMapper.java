@@ -6,15 +6,10 @@ import ru.devopsl.backendservice.payload.response.CategoryResponse;
 public class CategoryMapper {
 
     public static Category mapToCategory(CategoryResponse categoryResponse) {
-        return new Category(
-                categoryResponse.name()
-        );
+        return new Category(categoryResponse.name());
     }
 
     public static CategoryResponse mapToCategoryResponse(Category category) {
-        return new CategoryResponse(
-                category.getId(),
-                category.getName()
-        );
+        return new CategoryResponse(category.getId(), category.getName());
     }
 }

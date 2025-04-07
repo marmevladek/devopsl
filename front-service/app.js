@@ -1,34 +1,17 @@
-const express = require('express');
+const express = require("express");
+const path = require("path");
+const index = require("./routes/index");
+
+const PORT = process.env.PORT || 1001;
+
 const app = express();
-const port = 5101;
 
-app.use(express.static('public'));
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
-app.get('/', (req, res) => {
-	res.send(`
-			<div id="">div1</div>
-			<div id="">div2</div>
-			<div id="">div3</div>
-	`);
-})
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/", index);
 
-
-app.post('/create', (req,res) => {
-	console.log('create!');
-}) 
-
-app.get('/read', (req, res) => {
-	console.log('read!');
-})
-
-app.post('/update', (req, res) => { 
-	console.log('update!');
-})
-
-app.post('/delete', (req, res) => {
-	console.log('delete!');
-})
-
-app.listen(port, () => {
-	console.log(`Server listening at http://localhost:${port}`);
-})
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});

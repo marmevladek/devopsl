@@ -57,7 +57,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         sessions.remove(session);
     }
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 1000)
     public void sendProducts() {
         try {
             List<ProductResponse> products = productService.getAllProducts();

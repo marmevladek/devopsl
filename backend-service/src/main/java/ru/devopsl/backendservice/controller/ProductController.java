@@ -1,5 +1,6 @@
 package ru.devopsl.backendservice.controller;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<MessageResponse> addProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<MessageResponse> addProduct(@RequestBody @Valid ProductRequest productRequest) {
         logger.info("POST [/api/product/create] | Request received to add a new product");
         try {
             return new ResponseEntity<>(productService.addProduct(productRequest), HttpStatus.CREATED);

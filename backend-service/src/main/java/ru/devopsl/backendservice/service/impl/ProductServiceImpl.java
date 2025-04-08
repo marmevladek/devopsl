@@ -22,10 +22,13 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
+    private final WebSocketHandler webSocketHandler;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductServiceImpl(WebSocketHandler webSocketHandler, ProductRepository productRepository,
+            CategoryRepository categoryRepository) {
+        this.webSocketHandler = webSocketHandler;
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -38,6 +41,8 @@ public class ProductServiceImpl implements ProductService {
 
         Product savedProduct = productRepository.save(ProductMapper.mapToProduct(productRequest, category));
         logger.info("CREATE [addProduct()] | Product({}) has been successfully added", savedProduct.getId());
+
+        webSocketHandler.sendProducts();
 
         return new MessageResponse("Product has been successfully added");
     }
@@ -60,6 +65,8 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(existingProduct);
         logger.info("UPDATE [updateProduct()] | Product({}) has been successfully updated", id);
 
+        webSocketHandler.sendProducts();
+
         return new MessageResponse("Product has been successfully updated");
     }
 
@@ -73,6 +80,8 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.delete(existingProduct);
         logger.info("DELETE [deleteProduct()] | Product({}) has been successfully deleted", id);
+
+        webSocketHandler.sendProducts();
 
         return new MessageResponse("Product has been successfully deleted");
     }

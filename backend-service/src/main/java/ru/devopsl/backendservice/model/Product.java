@@ -24,11 +24,23 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "desctiption")
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "full_description")
+    private String fullDescription;
 
     @Column(name = "price")
     private float price;
+
+    @Column(name = "link_image")
+    private String linkImage;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
@@ -38,10 +50,15 @@ public class Product {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
-    public Product(String name, String description, float price, Category category, LocalDateTime createdAt) {
+    public Product(String name, String description, String fullDescription, float price, String linkImage,
+            String phoneNumber, String email, Category category, LocalDateTime createdAt) {
         this.name = name;
         this.description = description;
+        this.fullDescription = fullDescription;
         this.price = price;
+        this.linkImage = linkImage;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
         this.category = category;
         this.createdAt = createdAt;
     }

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import ru.devopsl.backendservice.repository.ProductRepository;
 import ru.devopsl.backendservice.service.ProductService;
 import ru.devopsl.backendservice.websocket.WebSocketHandler;
 
@@ -12,18 +13,16 @@ import ru.devopsl.backendservice.websocket.WebSocketHandler;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    private final ProductService productService;
+    private final ProductRepository productRepository;
     private final ObjectMapper objectMapper;
 
-    public WebSocketConfig(ProductService productService, ObjectMapper objectMapper) {
-        this.productService = productService;
+    public WebSocketConfig(ProductRepository productRepository, ObjectMapper objectMapper) {
+        this.productRepository = productRepository;
         this.objectMapper = objectMapper;
     }
 
-
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketHandler(productService, objectMapper), "/ws")
-                .setAllowedOrigins("*");
+        registry.addHandler(new WebSocketHandler(productRepository, objectMapper), "/ws").setAllowedOrigins("*");
     }
 }

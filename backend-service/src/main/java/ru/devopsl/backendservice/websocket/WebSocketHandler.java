@@ -1,43 +1,44 @@
 package ru.devopsl.backendservice.websocket;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import ru.devopsl.backendservice.mapper.ProductMapper;
 import ru.devopsl.backendservice.payload.response.ProductResponse;
-import ru.devopsl.backendservice.service.ProductService;
+import ru.devopsl.backendservice.repository.ProductRepository;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
 
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
     private final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
     private static final Set<WebSocketSession> sessions = new CopyOnWriteArraySet<>();
 
-    private final ProductService productService;
+    private final ProductRepository productRepository;
     private final ObjectMapper objectMapper;
 
-  
-    public WebSocketHandler(ProductService productService, ObjectMapper objectMapper) {
-        this.productService = productService;
+    public WebSocketHandler(ProductRepository productRepository, ObjectMapper objectMapper) {
+        this.productRepository = productRepository;
         this.objectMapper = objectMapper;
     }
-
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         sessions.add(session);
+        logger.info("WEBSOCKET | New connection established");
 
-        List<ProductResponse> products = productService.getAllProducts();
+        List<ProductResponse> products = productRepository.findAll().stream()
+                .map(product -> ProductMapper.mapToProductResponse(product, product.getCategory().getName()))
+                .collect(Collectors.toList());
         String jsonResponse = objectMapper.writeValueAsString(products);
 
         synchronized (session) {
@@ -56,12 +57,15 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, org.springframework.web.socket.CloseStatus status) {
         sessions.remove(session);
+        logger.info("WEBSOCKET | Connection closed");
     }
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 30000)
     public void sendProducts() {
         try {
-            List<ProductResponse> products = productService.getAllProducts();
+            List<ProductResponse> products = productRepository.findAll().stream()
+                    .map(product -> ProductMapper.mapToProductResponse(product, product.getCategory().getName()))
+                    .collect(Collectors.toList());
             String jsonResponse = objectMapper.writeValueAsString(products);
 
             for (WebSocketSession session : sessions) {

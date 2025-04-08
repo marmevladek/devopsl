@@ -9,7 +9,7 @@ async function createItem(item) {
         });
 
         if (!response.ok) {
-            throw new Error(`Ошибка при удалении продукта! Статус: ${response.status}`);
+            throw new Error(`Ошибка при добавлении продукта! Статус: ${response.status}`);
         }
         
         console.log('Продукт успешно удалён');

@@ -60,7 +60,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         logger.info("WEBSOCKET | Connection closed");
     }
 
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelay = 1000)
     public void sendProducts() {
         try {
             List<ProductResponse> products = productRepository.findAll().stream()

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="/css/addItem.css" rel="stylesheet" />
+    
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h2><%= title %></h2>
+  </div>
+  
+  <div class="menu">
+    <a href="/">На главную</a>
+  </div>
+
+  <div id="addMenu">
+
+    <a>Название:</a>
+    <form>
+      <input id="name" type="text">
+    </form>
+
+    <a>Описание:</a>
+    <form>
+      <input id="description" type="text">
+    </form>
+
+    <a>Цена:</a>
+    <form>
+      <input id="price" type="text">
+    </form>
+
+    <a>Категория:</a>
+    <form>
+      <input id="category" type="text">
+    </form>
+
+  </div>
+
+  <div class="sendButtonContainer">
+    <input id="sendButton" type="submit" value="Создать объявление" />
+  </div>
+
+</div>
+
+</body>
+<script type="module" src="service/create/createButtonEvent.js"></script>
+</html>

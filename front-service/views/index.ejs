@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href="/styles.css" rel="stylesheet" />
+    <link href="/css/index.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -12,11 +12,13 @@
   </div>
   
   <div class="menu">
-        <a href="#">Создать объявление</a>
+    <a href="createItem">Создать объявление</a>
+  </div>
 
-  <div class="content-container"></div>
+  <div id="itemsList"></div>
 
 </div>
 
 </body>
+<script type="module" src="service/index/socket.js"></script>
 </html>

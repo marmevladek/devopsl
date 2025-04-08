@@ -1,6 +1,7 @@
 {
   "name": "front-service",
   "version": "1.0.0",
+  "type": "module",
   "main": "app.js",
   "scripts": {
     "test": "test"
@@ -9,7 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "ejb": "^0.0.0-alpha.0",
+    "ejs": "^3.1.10",
     "express": "^5.1.0"
   }
 }

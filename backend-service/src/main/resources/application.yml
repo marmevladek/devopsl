@@ -5,8 +5,8 @@ spring:
   application:
     name: BACKEND-SERVICE
   datasource:
-     url: jdbc:postgresql://localhost:5432/devopsl-db            # <-- local
-#     url: jdbc:postgresql://postgresql:5432/devopsl-db     # <-- docker
+     #url: jdbc:postgresql://localhost:5432/devopsl-db            # <-- local
+     url: jdbc:postgresql://postgresql:5432/devopsl-db     # <-- docker
      username: postgres
      password: postgres
   jpa:

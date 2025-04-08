@@ -1,5 +1,5 @@
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
+export const router = Router();
 
 router.get("/", (req, res) => {
   res.render("index", {
@@ -7,4 +7,20 @@ router.get("/", (req, res) => {
   });
 });
 
-module.exports = router;
+router.get("/createItem", (req, res) => {
+  res.render("createItem", {
+    title: "Create",
+  });
+});
+
+router.get("/updateItem", (req, res) => {
+  res.render("updateItem", {
+    title: "Modify",
+  });
+});
+
+router.get("/readItem", (req, res) => {
+  res.render("readItem", {
+    title: "Read",
+  });
+});

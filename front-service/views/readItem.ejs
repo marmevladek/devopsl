@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="/css/readItem.css" rel="stylesheet" />
+    
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h2><%= title %></h2>
+  </div>
+  
+  <div class="menu">
+    <a href="/">На главную</a>
+  </div>
+
+  <div id="readContainer">
+
+    <a>Название:</a>
+    <a id="name"></a>
+
+    <a>Описание:</a>
+    <a id="description"></a>
+
+    <a>Цена:</a>
+    <a id="price"></a>
+
+    <a>Категория:</a>
+    <a id="category"></a>
+
+  </div>
+
+</div>
+
+</body>
+<script type="module" src="service/read/readBuilder.js"></script>
+</html>

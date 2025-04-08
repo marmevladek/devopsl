@@ -11,8 +11,6 @@ app.set("view engine", "ejs");
 
 app.use(express.static(join(".", "public")));
 app.use("/", router);
-app.use("/addItem", router);
-app.use("/modifyItem", router);
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

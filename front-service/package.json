@@ -4,7 +4,8 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "npm install"
   },
   "author": "",
   "license": "ISC",

@@ -11,9 +11,10 @@ async function deleteItem(itemId) {
             throw new Error(`Ошибка при удалении продукта! Статус: ${response.status}`);
         }
         
-        console.log('Продукт успешно удалён:');
+        console.log('Продукт успешно удалён');
     } catch (error) {
-        console.error('Ошибка при выполнении запроса:');
+        console.error('Ошибка при выполнении запроса');
+        throw error;
     }
 }
 

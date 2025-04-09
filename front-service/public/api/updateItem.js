@@ -15,6 +15,7 @@ async function updateItem(itemId, item) {
         console.log('Продукт успешно обвнолен:');
     } catch (error) {
         console.error('Ошибка при выполнении запроса:');
+        throw error;
     }
 }
 

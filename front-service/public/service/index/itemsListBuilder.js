@@ -9,6 +9,11 @@ function buildItemsList (item) {
 
     for (let i = 0; i < item.length; i++) {
 
+        let itemPhoto = document.createElement('img');
+        itemPhoto.src = item[i].linkImage;
+        itemPhoto.style = "height: 100px;"
+        itemPhoto.alt= "trying..."
+
         let itemName = document.createElement('a');
         itemName.innerHTML = item[i].name;
         itemName.href = "/readItem?id=" + item[i].id;
@@ -44,6 +49,7 @@ function buildItemsList (item) {
         let itemContainer = document.createElement('div')
         itemContainer.className = 'itemContainer';
 
+        itemContainer.appendChild(itemPhoto);
         itemContainer.appendChild(itemName);
         itemContainer.appendChild(itemDescription);
         itemContainer.appendChild(itemPrice);

@@ -6,8 +6,7 @@ body {
     display: grid;
     grid-template-areas:
       "header header"
-      "menu itemslist"
-      "sendButtonContainer sendButtonContainer";
+      "menu itemslist";
     grid-template-columns: 1fr 8fr;
   }
 
@@ -24,6 +23,36 @@ body {
   .container > div.menu {
     grid-area: menu;
     text-align: center;
+  }
+
+  .container > div#itemsList {
+    grid-area: itemslist;
+  }
+  .container > div#readContainer {
+    grid-area: itemslist;
+  }
+
+  div#readContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 100px;
+  }
+
+  div#readContainer > a {
+    height: 50px;
+  }
+
+  div.itemContainer {
+    display:grid;
+    text-align: center;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    height: 150px;
+  }
+
+  #link {
+    color: blue; /* Цвет текста */
+    text-decoration: underline; /* Подчеркивание */
+    cursor: pointer; /* Курсор при наведении */
   }
 
   .container > div#addMenu {
@@ -44,8 +73,13 @@ body {
     height: 100%;
     width: 100%;
   }
+  
+  .container > div#readContainer {
+    grid-area: itemslist;
+  }
 
   .container > div.sendButtonContainer {
     grid-area: sendButtonContainer;
+    
     text-align: center;
   }

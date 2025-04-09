@@ -9,18 +9,18 @@ router.get("/", (req, res) => {
 
 router.get("/createItem", (req, res) => {
   res.render("createItem", {
-    title: "Create",
+    title: "Магазин",
   });
 });
 
 router.get("/updateItem", (req, res) => {
   res.render("updateItem", {
-    title: "Modify",
+    title: "Магазин",
   });
 });
 
 router.get("/readItem", (req, res) => {
-  res.render("readItem", {
+  res.render("Магазин", {
     title: "Read",
   });
 });

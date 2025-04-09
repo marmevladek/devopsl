@@ -22,7 +22,7 @@ function buildItemsList (item) {
         itemDescription.innerHTML = item[i].description;
 
         let itemPrice = document.createElement('a');
-        itemPrice.innerHTML = item[i].price;
+        itemPrice.innerHTML = item[i].price + ' р.';
 
         let itemCategory = document.createElement('a');
         itemCategory.innerHTML = item[i].category;

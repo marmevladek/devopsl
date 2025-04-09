@@ -20,7 +20,7 @@ router.get("/updateItem", (req, res) => {
 });
 
 router.get("/readItem", (req, res) => {
-  res.render("Магазин", {
-    title: "Read",
+  res.render("readItem", {
+    title: "Магазин",
   });
 });

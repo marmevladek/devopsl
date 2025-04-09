@@ -1,6 +1,6 @@
 import createItem from "../../api/createItem.js";
 
-let sendButton = document.getElementById('sendButton');
+let sendButton = document.getElementById('button');
 
 
 sendButton.addEventListener('click', async () => {

@@ -37,71 +37,40 @@ public class ProductControllerTest {
 
     @Test
     void shouldAddProductSuccessfully() throws Exception {
-        ProductRequest request = new ProductRequest(
-                "Футболка",
-                "Краткое описание футболки",
-                "Полное описание футболки",
-                1234,
-                "http://link.com/image",
-                "+79999999999",
-                "email@gmail.com",
-                1L
-                );
+        ProductRequest request = new ProductRequest("Футболка", "Краткое описание футболки", "Полное описание футболки",
+                1234, "http://link.com/image", "+79999999999", "email@gmail.com", 1L);
         MessageResponse response = new MessageResponse("Product added");
 
         Mockito.when(productService.addProduct(Mockito.any())).thenReturn(response);
 
-        mockMvc.perform(post("/api/product/create")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
+        mockMvc.perform(post("/api/product/create").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("Product added"));
     }
 
     @Test
     void shouldUpdateProductSuccessfully() throws Exception {
-        ProductRequest request = new ProductRequest(
-                "Футболка",
-                "Краткое описание футболки",
-                "Полное описание футболки",
-                5421,
-                "http://link.com/image",
-                "+79324567876",
-                "email@gmail.com",
-                1L
-        );
+        ProductRequest request = new ProductRequest("Футболка", "Краткое описание футболки", "Полное описание футболки",
+                5421, "http://link.com/image", "+79324567876", "email@gmail.com", 1L);
         MessageResponse response = new MessageResponse("Product updated");
 
         Mockito.when(productService.updateProduct(Mockito.eq(1L), Mockito.any())).thenReturn(response);
 
-        mockMvc.perform(put("/api/product/update/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
+        mockMvc.perform(put("/api/product/update/1").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Product updated"));
     }
 
     @Test
     void shouldReturnProductById() throws Exception {
-        ProductResponse response = new ProductResponse(
-                1L,
-                "Футболка",
-                "Краткое описание футболки",
-                "Полное описание футболки",
-                1234,
-                "http://link.com/image",
-                "+79999999999",
-                "email@gmail.com",
-                "Одежда",
-                LocalDateTime.now()
-        );
+        ProductResponse response = new ProductResponse(1L, "Футболка", "Краткое описание футболки",
+                "Полное описание футболки", 1234, "http://link.com/image", "+79999999999", "email@gmail.com", "Одежда",
+                LocalDateTime.now());
 
         Mockito.when(productService.getProductById(1L)).thenReturn(response);
 
-        mockMvc.perform(get("/api/product/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Футболка"))
-                .andExpect(jsonPath("$.price").value(1234));
+        mockMvc.perform(get("/api/product/1")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Футболка")).andExpect(jsonPath("$.price").value(1234));
     }
 
     @Test
@@ -110,8 +79,7 @@ public class ProductControllerTest {
 
         Mockito.when(productService.deleteProduct(1L)).thenReturn(response);
 
-        mockMvc.perform(delete("/api/product/delete/1"))
-                .andExpect(status().isOk())
+        mockMvc.perform(delete("/api/product/delete/1")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Product deleted"));
     }
 }

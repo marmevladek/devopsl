@@ -21,7 +21,7 @@ services:
     command: ["node", "app.js"]
 
   postgres:
-    container_name: postgresql_devops
+    container_name: postgresql
     image: postgres:17.2
     volumes:
       - postgres:/var/lib/postgresql/data

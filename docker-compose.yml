@@ -2,9 +2,9 @@ version: "3.9"
 
 services:
   backend-service:
-    # build:
-    #   context: backend-service
-    #   dockerfile: Dockerfile
+#    build:
+#      context: backend-service
+#      dockerfile: Dockerfile
     image: marmevladek/devopsl-backend:latest
     platform: linux/amd64
     ports:
@@ -13,9 +13,9 @@ services:
       - postgres
 
   front-service:
-    # build:
-    #   context: front-service
-    #   dockerfile: Dockerfile
+#    build:
+#      context: front-service
+#      dockerfile: Dockerfile
     image: marmevladek/devopsl-frontend:latest
     platform: linux/amd64
     ports:
@@ -27,7 +27,7 @@ services:
     image: postgres:17.2
     volumes:
     - postgres:/var/lib/postgresql/data
-    - ./db-init/init.sql:/docker-entrypoint-initdb.d/init.sql
+#    - ./db-init/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5433:5432"
     environment:

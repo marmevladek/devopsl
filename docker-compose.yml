@@ -6,6 +6,7 @@ services:
     #   context: backend-service
     #   dockerfile: Dockerfile
     image: marmevladek/devopsl-backend:latest
+    platform: linux/amd64
     ports:
       - "1000:1000"
     depends_on:
@@ -16,6 +17,7 @@ services:
     #   context: front-service
     #   dockerfile: Dockerfile
     image: marmevladek/devopsl-frontend:latest
+    platform: linux/amd64
     ports:
       - "1001:1001"
     command: ["node", "app.js"]

@@ -30,13 +30,11 @@ public class DataInitializer {
     private void insertInitialData() {
         System.out.println("Вставляем стартовые данные...");
 
-        // Вставляем категории
         String[] categories = {"Электроника", "Книги", "Одежда", "Мебель", "Игрушки", "Продукты", "Инструменты"};
         for (String category : categories) {
             jdbcTemplate.update("INSERT INTO categories (name) VALUES (?)", category);
         }
 
-        // Вставляем товары — по 10 в каждой категории
         for (int catId = 1; catId <= categories.length; catId++) {
             for (int i = 1; i <= 10; i++) {
                 String name = "";
@@ -49,7 +47,7 @@ public class DataInitializer {
                 String createdAtStr = "2024-05-01 10:00:00";
 
                 switch (catId) {
-                    case 1: // Электроника
+                    case 1:
                         name = switch (i) {
                             case 1 -> "Смартфон Samsung Galaxy S21";
                             case 2 -> "Ноутбук Apple MacBook Pro 13\"";
@@ -80,7 +78,7 @@ public class DataInitializer {
                         price = 50000 + i * 5000;
                         linkImage = "http://example.com/images/electronics_" + i + ".jpg";
                         break;
-                    case 2: // Книги
+                    case 2:
                         name = switch (i) {
                             case 1 -> "Книга \"1984\" Джордж Оруэлл";
                             case 2 -> "Книга \"Мастер и Маргарита\" Михаил Булгаков";
@@ -99,7 +97,7 @@ public class DataInitializer {
                         price = 500 + i * 100;
                         linkImage = "http://example.com/images/books_" + i + ".jpg";
                         break;
-                    case 3: // Одежда
+                    case 3:
                         name = switch (i) {
                             case 1 -> "Футболка Nike Dri-FIT";
                             case 2 -> "Джинсы Levi's 501";

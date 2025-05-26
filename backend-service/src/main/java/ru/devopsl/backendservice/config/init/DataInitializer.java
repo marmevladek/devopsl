@@ -116,7 +116,7 @@ public class DataInitializer {
                         price = 2000 + i * 500;
                         linkImage = "http://example.com/images/clothing_" + i + ".jpg";
                         break;
-                    case 4: // Мебель
+                    case 4:
                         name = switch (i) {
                             case 1 -> "Диван IKEA EKTORP";
                             case 2 -> "Кресло Poäng";
@@ -135,7 +135,7 @@ public class DataInitializer {
                         price = 5000 + i * 1000;
                         linkImage = "http://example.com/images/furniture_" + i + ".jpg";
                         break;
-                    case 5: // Игрушки
+                    case 5:
                         name = switch (i) {
                             case 1 -> "Конструктор LEGO City";
                             case 2 -> "Кукла Barbie Dreamhouse";
@@ -154,7 +154,7 @@ public class DataInitializer {
                         price = 1000 + i * 300;
                         linkImage = "http://example.com/images/toys_" + i + ".jpg";
                         break;
-                    case 6: // Продукты
+                    case 6:
                         name = switch (i) {
                             case 1 -> "Кофе Jacobs Monarch 250г";
                             case 2 -> "Чай Greenfield Earl Grey";

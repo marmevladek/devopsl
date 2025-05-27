@@ -28,9 +28,9 @@ spec:
               protocol: TCP
           resources:
             requests:
-              cpu: "500m"      # теперь гарантируется 0.5 CPU
-              memory: "512Mi"  # гарантируется 512 Мб памяти
+              cpu: "500m"     
+              memory: "1Gi"  
             limits:
-              cpu: "2"         # максимум — 2 CPU
-              memory: "1Gi"    # максимум — 1 Гб памяти
+              cpu: "2"         
+              memory: "2Gi"    
       restartPolicy: Always

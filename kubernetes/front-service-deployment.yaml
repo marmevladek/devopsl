@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: front-service
+  name: front-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: front-service
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: front-service
+    spec:
+      containers:
+        - args:
+            - node
+            - app.js
+          image: marmevladek/devopsl-frontend:latest
+          name: front-service
+          ports:
+            - containerPort: 1001
+              protocol: TCP
+      restartPolicy: Always

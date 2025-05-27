@@ -16,7 +16,7 @@ describe('deleteItem', () => {
     const itemId = '12345';
     await deleteItem(itemId);
 
-    expect(fetch).toHaveBeenCalledWith(`http://localhost:1000/api/product/delete/${itemId}`, {
+    expect(fetch).toHaveBeenCalledWith(`http://localhost:32761/api/product/delete/${itemId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',

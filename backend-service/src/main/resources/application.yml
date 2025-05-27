@@ -12,3 +12,22 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health,info
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+  endpoint:
+    prometheus:
+      enabled: true
+  server:
+    port: 1000

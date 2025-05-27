@@ -1,6 +1,6 @@
 async function deleteItem(itemId) {
     try {
-        const response = await fetch(`http://localhost:1000/api/product/delete/${itemId}`, {
+        const response = await fetch(`http://localhost:32761/api/product/delete/${itemId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: front-service
+  name: front-service
+spec:
+  type: NodePort
+  ports:
+    - port: 1001
+      targetPort: 1001
+      nodePort: 32762
+  selector:
+    io.kompose.service: front-service

@@ -1,6 +1,6 @@
 async function readItem(id) {
   try {
-      const response = await fetch("http://localhost:1000/api/product/" + id);
+      const response = await fetch("http://localhost:32761/api/product/" + id);
       
       if (!response.ok) {
           throw new Error(`HTTP error! статус: ${response.status}`);

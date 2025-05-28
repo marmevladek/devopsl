@@ -4,6 +4,9 @@ metadata:
   annotations:
     kompose.cmd: kompose convert -f docker-compose.yml
     kompose.version: 1.36.0 (ae2a39403)
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "32761"       # Число или имя порта (например, "http")
+    prometheus.io/path: "/metrics"   # Путь должен совпадать с эндпоинтом
   labels:
     io.kompose.service: backend-service
   name: backend-service

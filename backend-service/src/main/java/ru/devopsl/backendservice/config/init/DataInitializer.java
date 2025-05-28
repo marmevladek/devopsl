@@ -173,7 +173,7 @@ public class DataInitializer {
                     price = 100 + i * 50;
                     linkImage = "http://example.com/images/food_" + i + ".jpg";
                     break;
-                case 7: // Инструменты
+                case 7:
                     name = switch (i) {
                     case 1 -> "Дрель Bosch GSB 13 RE";
                     case 2 -> "Отвертка Stanley FatMax";

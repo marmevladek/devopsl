@@ -100,5 +100,4 @@ jobs:
 
       - name: Get Minikube service URL (опционально)
         run: |
-          minikube service frontend-service --url
-            marmevladek/devopsl-frontend:latest
+          minikube service front-service --url

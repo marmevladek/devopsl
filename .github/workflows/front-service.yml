@@ -98,6 +98,6 @@ jobs:
           kubectl get pods -o wide
           kubectl get svc
 
-      - name: Get Minikube service URL (опционально)
+      - name: Get Minikube service URL
         run: |
           minikube service front-service --url

@@ -31,7 +31,7 @@ jobs:
       working-directory: front-service
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     strategy:
       matrix:
@@ -51,7 +51,7 @@ jobs:
 
   docker:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

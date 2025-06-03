@@ -73,4 +73,31 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
+
+  deploy:
+    needs: docker
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify kubectl access
+        run: |
+          kubectl cluster-info
+          kubectl get nodes
+
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f kubernetes/
+          
+          kubectl rollout restart deployment/front-service
+          
+          kubectl rollout status deployment/front-service
+          
+          kubectl get pods -o wide
+          kubectl get svc
+
+      - name: Get Minikube service URL (опционально)
+        run: |
+          minikube service frontend-service --url
             marmevladek/devopsl-frontend:latest

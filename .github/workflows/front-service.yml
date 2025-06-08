@@ -13,8 +13,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: self-hosted
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
@@ -32,7 +31,7 @@ jobs:
       working-directory: front-service
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     strategy:
       matrix:
@@ -52,7 +51,7 @@ jobs:
 
   docker:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -75,3 +74,30 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: |
             marmevladek/devopsl-frontend:latest
+
+  deploy:
+    needs: docker
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify kubectl access
+        run: |
+          kubectl cluster-info
+          kubectl get nodes
+
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f kubernetes/
+          
+          kubectl rollout restart deployment/front-service
+          
+          kubectl rollout status deployment/front-service
+          
+          kubectl get pods -o wide
+          kubectl get svc
+
+      - name: Get Minikube service URL
+        run: |
+          minikube service front-service --url

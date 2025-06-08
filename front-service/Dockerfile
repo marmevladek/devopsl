@@ -7,6 +7,8 @@ WORKDIR /app
 # Копируем package.json и package-lock.json (если есть)
 COPY package*.json ./
 
+COPY sonar-project.properties . 
+
 # Устанавливаем зависимости с использованием npm ci
 RUN npm ci
 

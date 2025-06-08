@@ -3,7 +3,9 @@ package ru.devopsl.backendservice.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+import ru.devopsl.backendservice.dto.ProductDTO;
 import ru.devopsl.backendservice.mapper.ProductMapper;
 import ru.devopsl.backendservice.model.Category;
 import ru.devopsl.backendservice.model.Product;
@@ -25,12 +27,14 @@ public class ProductServiceImpl implements ProductService {
     private final WebSocketHandler webSocketHandler;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     public ProductServiceImpl(WebSocketHandler webSocketHandler, ProductRepository productRepository,
-            CategoryRepository categoryRepository) {
+                              CategoryRepository categoryRepository, RabbitTemplate rabbitTemplate) {
         this.webSocketHandler = webSocketHandler;
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -43,6 +47,23 @@ public class ProductServiceImpl implements ProductService {
         logger.info("CREATE [addProduct()] | Product({}) has been successfully added", savedProduct.getId());
 
         webSocketHandler.sendProducts();
+
+        rabbitTemplate.convertAndSend(
+                "match-exchange",
+                "match-exchange.create-product",
+                new ProductDTO(
+                        savedProduct.getId(),
+                        savedProduct.getName(),
+                        savedProduct.getDescription(),
+                        savedProduct.getFullDescription(),
+                        savedProduct.getPrice(),
+                        savedProduct.getLinkImage(),
+                        savedProduct.getPhoneNumber(),
+                        savedProduct.getEmail(),
+                        savedProduct.getCreatedAt(),
+                        category.getName()
+                )
+        );
 
         return new MessageResponse("Product has been successfully added");
     }
@@ -67,6 +88,23 @@ public class ProductServiceImpl implements ProductService {
 
         webSocketHandler.sendProducts();
 
+        rabbitTemplate.convertAndSend(
+                "match-exchange",
+                "match-exchange.update-product",
+                new ProductDTO(
+                        existingProduct.getId(),
+                        existingProduct.getName(),
+                        existingProduct.getDescription(),
+                        existingProduct.getFullDescription(),
+                        existingProduct.getPrice(),
+                        existingProduct.getLinkImage(),
+                        existingProduct.getPhoneNumber(),
+                        existingProduct.getEmail(),
+                        existingProduct.getCreatedAt(),
+                        existingProduct.getCategory().getName()
+                )
+        );
+
         return new MessageResponse("Product has been successfully updated");
     }
 
@@ -82,6 +120,23 @@ public class ProductServiceImpl implements ProductService {
         logger.info("DELETE [deleteProduct()] | Product({}) has been successfully deleted", id);
 
         webSocketHandler.sendProducts();
+
+        rabbitTemplate.convertAndSend(
+                "match-exchange",
+                "match-exchange.delete-product",
+                new ProductDTO(
+                        existingProduct.getId(),
+                        existingProduct.getName(),
+                        existingProduct.getDescription(),
+                        existingProduct.getFullDescription(),
+                        existingProduct.getPrice(),
+                        existingProduct.getLinkImage(),
+                        existingProduct.getPhoneNumber(),
+                        existingProduct.getEmail(),
+                        existingProduct.getCreatedAt(),
+                        existingProduct.getCategory().getName()
+                )
+        );
 
         return new MessageResponse("Product has been successfully deleted");
     }

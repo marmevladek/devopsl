@@ -25,9 +25,11 @@ jobs:
           java-version: 17
 
       - name: Format code
+        working-directory: backend-service
         run: mvn net.revelc.code.formatter:formatter-maven-plugin:2.24.1:format
 
       - name: Validate format
+        working-directory: backend-service
         run: mvn formatter:validate
 
       - name: Build backend-service
@@ -90,9 +92,11 @@ jobs:
           java-version: 17
 
       - name: Format code
+        working-directory: notification-service
         run: mvn net.revelc.code.formatter:formatter-maven-plugin:2.24.1:format
 
       - name: Validate format
+        working-directory: notification-service
         run: mvn formatter:validate
 
       - name: Build notification-service

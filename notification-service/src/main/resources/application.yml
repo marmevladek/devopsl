@@ -6,3 +6,12 @@ telegram:
     name: datingappitmobot
     token: 7924634554:AAEXM-wOy2sKfzLWnznll1I7MA1_90o8Vj0
     chatId: 1397544955
+
+spring:
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    username: ${SPRING_RABBITMQ_USERNAME:admin}
+    password: ${SPRING_RABBITMQ_PASSWORD:admin}
+    listener:
+      simple:
+        message-converter: jackson2JsonMessageConverter

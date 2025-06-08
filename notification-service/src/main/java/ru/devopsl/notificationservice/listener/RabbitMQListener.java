@@ -26,7 +26,7 @@ public class RabbitMQListener {
                 new Notification(
                         "Добавлен новый товар:\n\n" +
                                 "Идентификатор: " + productDTO.getId() + "\n" +
-                                "Категория" + productDTO.getCategory() + "\n" +
+                                "Категория: " + productDTO.getCategory() + "\n" +
                                 "Название: " + productDTO.getName() + "\n" +
                                 "Описание: " + productDTO.getDescription() + "\n" +
                                 "Цена: " + productDTO.getPrice() + "\n" +
@@ -44,7 +44,7 @@ public class RabbitMQListener {
                 chatId,
                 new Notification(
                         "Товар обновлен (id=" + productDTO.getId() + "):\n\n" +
-                                "Категория" + productDTO.getCategory() + "\n" +
+                                "Категория: " + productDTO.getCategory() + "\n" +
                                 "Название: " + productDTO.getName() + "\n" +
                                 "Описание: " + productDTO.getDescription() + "\n" +
                                 "Цена: " + productDTO.getPrice() + "\n" +
@@ -62,7 +62,7 @@ public class RabbitMQListener {
                 chatId,
                 new Notification(
                         "Товар удален (" + productDTO.getId() + "):\n\n" +
-                                "Категория" + productDTO.getCategory() + "\n" +
+                                "Категория: " + productDTO.getCategory() + "\n" +
                                 "Название: " + productDTO.getName() + "\n" +
                                 "Описание: " + productDTO.getDescription() + "\n" +
                                 "Цена: " + productDTO.getPrice() + "\n" +

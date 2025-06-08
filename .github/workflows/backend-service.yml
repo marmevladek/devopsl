@@ -24,8 +24,8 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
-      - name: Format code (formatter-maven-plugin)
-        run: mvn formatter:format
+      - name: Format code
+        run: mvn net.revelc.code.formatter:formatter-maven-plugin:2.24.1:format
 
       - name: Validate format
         run: mvn formatter:validate
@@ -89,8 +89,8 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
-      - name: Format code (formatter-maven-plugin)
-        run: mvn formatter:format
+      - name: Format code
+        run: mvn net.revelc.code.formatter:formatter-maven-plugin:2.24.1:format
 
       - name: Validate format
         run: mvn formatter:validate

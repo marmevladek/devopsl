@@ -15,9 +15,6 @@ jobs:
   build-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Formatter code
-        run: mvn net.revelc.code.formatter:formatter-maven-plugin:2.24.1:format
-
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -26,6 +23,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 17
+
+      - name: Format code (formatter-maven-plugin)
+        run: mvn formatter:format
+
+      - name: Validate format
+        run: mvn formatter:validate
 
       - name: Build backend-service
         run: mvn clean install -DskipTests
@@ -77,9 +80,6 @@ jobs:
   build-notification:
     runs-on: ubuntu-latest
     steps:
-      - name: Formatter code
-        run: mvn net.revelc.code.formatter:formatter-maven-plugin:2.24.1:format
-
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -88,6 +88,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 17
+
+      - name: Format code (formatter-maven-plugin)
+        run: mvn formatter:format
+
+      - name: Validate format
+        run: mvn formatter:validate
 
       - name: Build notification-service
         run: mvn clean install -DskipTests

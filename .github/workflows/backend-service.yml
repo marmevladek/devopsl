@@ -49,6 +49,14 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
+      - name: Format code
+        working-directory: backend-service
+        run: mvn net.revelc.code.formatter:formatter-maven-plugin:2.24.1:format
+
+      - name: Validate format
+        working-directory: backend-service
+        run: mvn formatter:validate
+
       - name: Test backend-service
         run: mvn test
         working-directory: backend-service
@@ -115,6 +123,14 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 17
+
+      - name: Format code
+        working-directory: notification-service
+        run: mvn net.revelc.code.formatter:formatter-maven-plugin:2.24.1:format
+
+      - name: Validate format
+        working-directory: notification-service
+        run: mvn formatter:validate
 
       - name: Test notification-service
         run: mvn test

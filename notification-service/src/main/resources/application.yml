@@ -1,0 +1,7 @@
+server:
+  port: 1010
+
+telegram:
+  bot:
+    name: datingappitmobot
+    token: 7924634554:AAEXM-wOy2sKfzLWnznll1I7MA1_90o8Vj0

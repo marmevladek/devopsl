@@ -16,7 +16,7 @@ describe('createItem', () => {
     const item = { name: 'Test Product', price: 100 };
     await createItem(item);
 
-    expect(fetch).toHaveBeenCalledWith('http://localhost:30001/api/product/create', {
+    expect(fetch).toHaveBeenCalledWith('http://backend-service:1000/api/product/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

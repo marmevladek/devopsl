@@ -1,6 +1,6 @@
 async function createItem(item) {
     try {
-        const response = await fetch(`http://localhost:30001/api/product/create`, {
+        const response = await fetch(`http://backend-service:1000/api/product/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -18,7 +18,7 @@ describe('updateItem', () => {
     
     await updateItem(itemId, item);
 
-    expect(fetch).toHaveBeenCalledWith(`http://localhost:30001/api/product/update/${itemId}`, {
+    expect(fetch).toHaveBeenCalledWith(`http://backend-service:1000/api/product/update/${itemId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json;',

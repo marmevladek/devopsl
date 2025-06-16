@@ -12,6 +12,6 @@ spec:
   ports:
     - port: 1001
       targetPort: 1001
-      nodePort: 32767
+      nodePort: 30002
   selector:
     io.kompose.service: front-service

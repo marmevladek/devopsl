@@ -1,6 +1,6 @@
 async function updateItem(itemId, item) {
     try {
-        const response = await fetch(`http://localhost:32761/api/product/update/${itemId}`, {
+        const response = await fetch(`http://localhost:30001/api/product/update/${itemId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;'

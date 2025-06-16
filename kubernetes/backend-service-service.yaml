@@ -5,7 +5,7 @@ metadata:
     kompose.cmd: kompose convert -f docker-compose.yml
     kompose.version: 1.36.0 (ae2a39403)
     prometheus.io/scrape: "true"
-    prometheus.io/port: "32761"       # Число или имя порта (например, "http")
+    prometheus.io/port: "30001"       # Число или имя порта (например, "http")
     prometheus.io/path: "/metrics"   # Путь должен совпадать с эндпоинтом
   labels:
     io.kompose.service: backend-service
@@ -15,6 +15,6 @@ spec:
   ports:
     - port: 1000
       targetPort: 1000
-      nodePort: 32761
+      nodePort: 30001
   selector:
     io.kompose.service: backend-service

@@ -16,7 +16,7 @@ describe('readItem', () => {
     const itemId = '12345';
     await readItem(itemId);
 
-    expect(fetch).toHaveBeenCalledWith(`http://localhost:32761/api/product/${itemId}`);
+    expect(fetch).toHaveBeenCalledWith(`http://localhost:30001/api/product/${itemId}`);
   });
 
   it('should throw an error if response is not ok', async () => {

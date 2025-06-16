@@ -1,6 +1,6 @@
 import buildItemsList from "./itemsListBuilder.js";
 
-var socket = new WebSocket("ws://backend-service:1000/ws");
+var socket = new WebSocket("ws://localhost:30001/ws");
 
 socket.onopen = function() {
     console.log("Соединение установлено.");

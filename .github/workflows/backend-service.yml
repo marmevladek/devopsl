@@ -5,11 +5,13 @@ on:
     branches: [ "main" ]
     paths:
       - 'backend-service/**'
+      - 'notification-service/**'
       - '.github/workflows/backend-service.yml'
   pull_request:
     branches: [ "main" ]
     paths:
       - 'backend-service/**'
+      - 'notification-service/**'
 
 jobs:
   build-backend:

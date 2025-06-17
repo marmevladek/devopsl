@@ -78,7 +78,7 @@ jobs:
   deploy:
     needs: docker
     runs-on: ubuntu-latest
-    #dct
+    #dcta
     steps:
       - name: Mark CI success
         if: success()

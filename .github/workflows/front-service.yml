@@ -78,8 +78,10 @@ jobs:
   deploy:
     needs: docker
     runs-on: ubuntu-latest
+    #dct
     steps:
       - name: Mark CI success
         if: success()
         run: |
           echo "CI_SUCCESS_COMMIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          

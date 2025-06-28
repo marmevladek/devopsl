@@ -43,7 +43,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-# checkout
+# checkoutasd
     - run: npm ci
       working-directory: front-service
     - run: npm test

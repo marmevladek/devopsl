@@ -43,7 +43,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-
+# checkout
     - run: npm ci
       working-directory: front-service
     - run: npm test
@@ -78,7 +78,7 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    #dctaф123фф1фыв..11155115
+    #dctaф123фф1фыв..11155115141414
     steps:
       - name: Mark CI success
         if: success()

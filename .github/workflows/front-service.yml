@@ -78,7 +78,7 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    #dctaф123фф1фыв..11
+    #dctaф123фф1фыв..11155115
     steps:
       - name: Mark CI success
         if: success()

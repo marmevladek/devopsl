@@ -88,9 +88,6 @@ pipeline {
         }
         
         stage('Build and Push Docker Image') {
-            agent {
-                label 'docker' // Убедись, что агент поддерживает Docker
-            }
             environment {
                 DOCKER_HUB_USERNAME = credentials('DOCKER_HUB_USERNAME')
                 DOCKER_HUB_TOKEN = credentials('DOCKER_HUB_TOKEN')

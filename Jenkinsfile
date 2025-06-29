@@ -10,7 +10,6 @@ pipeline {
     }
     
     tools {
-        nodejs 'node18'
         nodejs 'node20'
         nodejs 'node22'
     }

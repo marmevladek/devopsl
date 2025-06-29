@@ -87,50 +87,51 @@ pipeline {
             }
         }
         
-    stage('Docker Build and Push') {
-        agent {
-            docker {
-                image 'docker:dind'
-                args '--privileged --network=host -v /var/run/docker.sock:/var/run/docker.sock'
-                reuseNode true
+        stage('Docker Build and Push') {
+            agent {
+                docker {
+                    image 'docker:dind'
+                    args '--privileged --network=host -v /var/run/docker.sock:/var/run/docker.sock'
+                    reuseNode true
+                }
             }
-        }
-        environment {
-            DOCKER_HUB_USERNAME = credentials('DOCKER_HUB_USERNAME')
-            DOCKER_HUB_TOKEN = credentials('DOCKER_HUB_TOKEN')
-        }
-        steps {
-            script {
-                // Безопасный способ передачи credentials
-                withCredentials([usernamePassword(
-                    credentialsId: 'DOCKER_HUB_CREDS',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    // Настройка Buildx
-                    sh '''
-                    docker buildx create --use --name mybuilder || true
-                    docker buildx inspect --bootstrap || true
-                    '''
-                    
-                    // Логин в Docker Hub (безопасный способ)
-                    sh '''
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    '''
-                    
-                    // Сборка и пуш образа
-                    dir('front-service') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'DOCKER_HUB_CREDS',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+                        // Настройка Buildx
                         sh '''
-                        docker buildx build \
-                            --platform linux/amd64,linux/arm64 \
-                            -t marmevladek/devopsl-frontend:latest \
-                            --push \
-                            .
+                        docker buildx create --use --name mybuilder || true
+                        docker buildx inspect --bootstrap || true
                         '''
+                        
+                        // Логин в Docker Hub
+                        sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        '''
+                        
+                        // Сборка и пуш образа
+                        dir('front-service') {
+                            sh '''
+                            docker buildx build \
+                                --platform linux/amd64,linux/arm64 \
+                                -t marmevladek/devopsl-frontend:latest \
+                                --push \
+                                .
+                            '''
+                        }
+                        
+                        // Выход из Docker Hub
+                        sh 'docker logout'
                     }
-                    
-                    // Выход из Docker Hub
-                    sh 'docker logout'
+                }
+            }
+            post {
+                always {
+                    sh 'docker buildx rm mybuilder || true'
                 }
             }
         }

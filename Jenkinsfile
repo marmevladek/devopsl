@@ -117,32 +117,32 @@ pipeline {
             }
         }
 
-        stage('CD - Deploy to Minikube') {
-            // ── при желании вынесите на отдельный label,
-            //    например agent { label 'minikube' }
-            //environment {
-                // Файл $KUBECONFIG попадёт в контейнер как /tmp/kubeconfig
-                // (ID создаётся в Jenkins → Credentials → Kind = “Secret file”)
-                //KUBECONFIG = credentials('MINIKUBE_KUBECONFIG')
-            //}
-            steps {
-                //withCredentials([file(credentialsId: 'MINIKUBE_KUBECONFIG', variable: 'KUBECFG')]) {
-                    sh '''
-                        # Указываем kubeconfig только для текущего шага
-                        # export KUBECONFIG="$KUBECFG"
-        
-                        # Проверяем доступ
-                        kubectl get nodes
-        
-                        # Обновляем ресурсы (создаст или перезапустит, если уже есть)
-                        kubectl apply -f /home/host/devops/devopsL/kubernetes/front-service-deployment.yaml
-                        kubectl apply -f /home/host/devops/devopsL/kubernetes/front-service-service.yaml
-        
-                        # Дополнительно — принудительный rollout, если нужен «жёсткий» рестарт
-                        # kubectl rollout restart deployment/front-service
-                    '''
-                }
+    stage('CD - Deploy to Minikube') {
+        // ── при желании вынесите на отдельный label,
+        //    например agent { label 'minikube' }
+        environment {
+            // Файл $KUBECONFIG попадёт в контейнер как /tmp/kubeconfig
+            // (ID создаётся в Jenkins → Credentials → Kind = “Secret file”)
+            KUBECONFIG = credentials('MINIKUBE_KUBECONFIG')
+        }
+        steps {
+            withCredentials([file(credentialsId: 'MINIKUBE_KUBECONFIG', variable: 'KUBECFG')]) {
+                sh '''
+                    # Указываем kubeconfig только для текущего шага
+                    export KUBECONFIG="$KUBECFG"
+    
+                    # Проверяем доступ
+                    kubectl get nodes
+    
+                    # Обновляем ресурсы (создаст или перезапустит, если уже есть)
+                    kubectl apply -f /home/host/devops/devopsL/kubernetes/front-service-deployment.yaml
+                    kubectl apply -f /home/host/devops/devopsL/kubernetes/front-service-service.yaml
+    
+                    # Дополнительно — принудительный rollout, если нужен «жёсткий» рестарт
+                    # kubectl rollout restart deployment/front-service
+                '''
             }
+        }
     }
     
     post {

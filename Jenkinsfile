@@ -120,11 +120,11 @@ pipeline {
         stage('CD - Deploy to Minikube') {
             // ── при желании вынесите на отдельный label,
             //    например agent { label 'minikube' }
-            environment {
+            //environment {
                 // Файл $KUBECONFIG попадёт в контейнер как /tmp/kubeconfig
                 // (ID создаётся в Jenkins → Credentials → Kind = “Secret file”)
                 //KUBECONFIG = credentials('MINIKUBE_KUBECONFIG')
-            }
+            //}
             steps {
                 //withCredentials([file(credentialsId: 'MINIKUBE_KUBECONFIG', variable: 'KUBECFG')]) {
                     sh '''

@@ -110,7 +110,7 @@ pipeline {
                     echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
                 '''
         
-                // Сборка и загрузка образа
+                // Сборка и загрузка образаaaaa
                 sh '''
                     docker buildx build \
                         --push \

@@ -89,27 +89,32 @@ pipeline {
         
         stage('docker') {
             agent {
-                label 'ubuntu-latest'
+                // Используйте существующие метки ваших агентов
+                label 'docker || linux || master' 
             }
+            needs: ['test']
             environment {
-                // Используем переменные, которые уже определены в Jenkins
                 DOCKER_USER = "${env.DOCKER_HUB_USERNAME}"
                 DOCKER_TOKEN = "${env.DOCKER_HUB_TOKEN}"
             }
             steps {
-                // 1. Получение кода из репозитория
                 checkout scm
         
-                // 2. Настройка Buildx (если требуется)
-                sh 'docker buildx create --use --name mybuilder || true'
-                sh 'docker buildx inspect --bootstrap'
+                // Проверка доступности Docker
+                sh 'docker --version'
         
-                // 3. Логин в Docker Hub с использованием ВАШИХ переменных
+                // Настройка Buildx (с обработкой ошибок)
+                sh '''
+                    docker buildx create --use --name mybuilder || true
+                    docker buildx inspect --bootstrap
+                '''
+        
+                // Логин в Docker Hub
                 sh '''
                     echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
                 '''
         
-                // 4. Сборка и загрузка образа
+                // Сборка и загрузка образа
                 sh '''
                     docker buildx build \
                         --push \
@@ -121,7 +126,6 @@ pipeline {
             }
             post {
                 always {
-                    // Очистка после выполнения
                     sh 'docker logout'
                 }
             }

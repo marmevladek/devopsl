@@ -120,8 +120,6 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 script {
-                    // Переключаем контекст kubectl на minikube
-                    sh 'kubectl config use-context minikube'
 
                     // Обновляем образ в deployment (принудительный триггер обновления)
                     sh "kubectl set image deployment/frontend frontend=${IMAGE_NAME}:latest --record"

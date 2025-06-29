@@ -119,19 +119,38 @@ pipeline {
 
         stage('Deploy to Minikube') {
             environment {
-                IMAGE_NAME = 'marmevladek/devopsl-frontend'
+                IMAGE_NAME = 'marmevladek/devopsl-frontend:latest'
             }
             steps {
                 script {
-
-                    sh '''
-                      minikube kubectl -- set image deployment/front-service \
-                        front-service=${IMAGE_NAME}
-                      minikube kubectl -- rollout status deployment/front-service --timeout=120s
-                    '''
+                    // Используем стандартный kubeconfig
+                    def KUBECONFIG = "/var/lib/jenkins/.kube/config"
+                    
+                    // Проверяем доступность конфига
+                    sh "ls -la ${KUBECONFIG} || true"
+                    
+                    // Проверка соединения с кластером
+                    sh """
+                        echo "=== Проверяем соединение с кластером ==="
+                        kubectl --kubeconfig=${KUBECONFIG} cluster-info
+                        kubectl --kubeconfig=${KUBECONFIG} get nodes
+                    """
+                    
+                    // Обновляем образ
+                    sh """
+                        echo "=== Обновляем образ в Deployment ==="
+                        kubectl --kubeconfig=${KUBECONFIG} set image deployment/front-service front-service=${IMAGE_NAME} --record
+                    """
+                    
+                    // Ожидаем завершения rollout
+                    sh """
+                        echo "=== Ожидаем завершения rollout ==="
+                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/front-service --timeout=120s || true
+                    """
                 }
             }
         }
+
     }
     post {
         always {

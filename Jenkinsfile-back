@@ -1,0 +1,65 @@
+pipeline {
+    agent any                        // тот же сервер, где стоит Jenkins
+    tools {                          // предварительно добавьте в «Global Tool Configuration»
+        jdk   'jdk17'               // Temurin 17 (или другое имя, если задали своё)
+        maven 'maven3'              // Maven 3.x
+    }
+
+    environment {
+        IMAGE_NAME        = 'marmevladek/devopsl-backend'
+        DOCKER_HUB_USER   = credentials('DOCKER_HUB_USERNAME')
+        DOCKER_HUB_TOKEN  = credentials('DOCKER_HUB_TOKEN')
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+
+        stage('Build (skip tests)') {
+            steps {
+                dir('backend-service') {
+                    sh 'mvn clean install -DskipTests'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('backend-service') {
+                    sh 'mvn test'
+                }
+            }
+            post {
+                always { junit 'backend-service/target/surefire-reports/*.xml' }
+            }
+        }
+
+        stage('Build & Push Docker Image') {
+            steps {
+                script {
+                    def platforms = ['linux/amd64', 'linux/arm64']
+
+                    // логин в Docker Hub
+                    sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USER} --password-stdin"
+
+                    // инициализация buildx (разово)
+                    sh '''
+                        docker buildx create --use --name mybuilder || true
+                        docker buildx inspect mybuilder --bootstrap
+                    '''
+
+                    // сборка и пуш
+                    sh """
+                        docker buildx build \
+                          --platform ${platforms.join(',')} \
+                          --file ./backend-service/Dockerfile \
+                          --tag ${IMAGE_NAME}:latest \
+                          --push ./backend-service
+                    """
+                }
+            }
+        }
+    }
+}

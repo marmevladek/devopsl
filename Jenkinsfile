@@ -2,12 +2,12 @@ pipeline {
     agent any
     
     triggers {
-        pollSCM('H/5 * * * *')
+        pollSCM('H/5 * * * *') // Проверять изменения каждые 5 минут
     }
     
     tools {
-        nodejs 'node18'
-        nodejs 'node20'
+        nodejs 'node18' // Предварительно нужно настроить NodeJS в Global Tool Configuration
+        nodejs 'node20' // Можно добавить несколько версий Node.js
         nodejs 'node22'
     }
     
@@ -15,12 +15,10 @@ pipeline {
         stage('Build and Test') {
             parallel {
                 stage('Build') {
-                    parallel {
+                    stages {
                         stage('Build Node 18') {
-                            agent { label 'any' }
-                            options { skipDefaultCheckout() }
                             steps {
-                                ws('devopsL_main_node18') {
+                                script {
                                     nodejs('node18') {
                                         checkout scm
                                         dir('front-service') {
@@ -32,10 +30,8 @@ pipeline {
                             }
                         }
                         stage('Build Node 20') {
-                            agent { label 'any' }
-                            options { skipDefaultCheckout() }
                             steps {
-                                ws('devopsL_main_node20') {
+                                script {
                                     nodejs('node20') {
                                         checkout scm
                                         dir('front-service') {
@@ -47,10 +43,8 @@ pipeline {
                             }
                         }
                         stage('Build Node 22') {
-                            agent { label 'any' }
-                            options { skipDefaultCheckout() }
                             steps {
-                                ws('devopsL_main_node22') {
+                                script {
                                     nodejs('node22') {
                                         checkout scm
                                         dir('front-service') {
@@ -65,12 +59,10 @@ pipeline {
                 }
                 
                 stage('Test') {
-                    parallel {
+                    stages {
                         stage('Test Node 18') {
-                            agent { label 'any' }
-                            options { skipDefaultCheckout() }
                             steps {
-                                ws('devopsL_main_node18') {
+                                script {
                                     nodejs('node18') {
                                         checkout scm
                                         dir('front-service') {
@@ -82,10 +74,8 @@ pipeline {
                             }
                         }
                         stage('Test Node 20') {
-                            agent { label 'any' }
-                            options { skipDefaultCheckout() }
                             steps {
-                                ws('devopsL_main_node20') {
+                                script {
                                     nodejs('node20') {
                                         checkout scm
                                         dir('front-service') {
@@ -97,10 +87,8 @@ pipeline {
                             }
                         }
                         stage('Test Node 22') {
-                            agent { label 'any' }
-                            options { skipDefaultCheckout() }
                             steps {
-                                ws('devopsL_main_node22') {
+                                script {
                                     nodejs('node22') {
                                         checkout scm
                                         dir('front-service') {

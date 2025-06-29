@@ -92,7 +92,6 @@ pipeline {
                 // Используйте существующие метки ваших агентов
                 label 'docker || linux || master' 
             }
-            needs: ['test']
             environment {
                 DOCKER_USER = "${env.DOCKER_HUB_USERNAME}"
                 DOCKER_TOKEN = "${env.DOCKER_HUB_TOKEN}"

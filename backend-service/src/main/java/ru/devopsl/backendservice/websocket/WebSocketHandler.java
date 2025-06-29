@@ -16,12 +16,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
     private final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
     private static final Set<WebSocketSession> sessions = new CopyOnWriteArraySet<>();
+    private static final ConcurrentMap<String, ReentrantLock> SESSION_LOCKS = new ConcurrentHashMap<>();
 
     private final ProductRepository productRepository;
     private final ObjectMapper objectMapper;
@@ -41,11 +45,18 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 .collect(Collectors.toList());
         String jsonResponse = objectMapper.writeValueAsString(products);
 
-        synchronized (session) {
+        sendMessageSafely(session, jsonResponse);
+    }
+
+    private void sendMessageSafely(WebSocketSession session, String payload) throws IOException {
+        ReentrantLock lock = SESSION_LOCKS.computeIfAbsent(session.getId(), id -> new ReentrantLock());
+        lock.lock();
+        try {
             if (session.isOpen()) {
-                session.sendMessage(new TextMessage(jsonResponse));
-                logger.info("WEBSOCKET [afterConnectionEstablished()] | Products sent on connection");
+                session.sendMessage(new TextMessage(payload));
             }
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -57,6 +68,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, org.springframework.web.socket.CloseStatus status) {
         sessions.remove(session);
+        SESSION_LOCKS.remove(session.getId());
         logger.info("WEBSOCKET | Connection closed");
     }
 
@@ -70,12 +82,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
             for (WebSocketSession session : sessions) {
                 if (session.isOpen()) {
-                    session.sendMessage(new TextMessage(jsonResponse));
+                    sendMessageSafely(session, jsonResponse);
                     logger.info("WEBSOCKET [sendProducts()] | List of all products sent");
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("WEBSOCKET [sendProducts()] | Error", e);
         }
     }
 }

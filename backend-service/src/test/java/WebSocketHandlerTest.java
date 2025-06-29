@@ -38,7 +38,8 @@ class WebSocketHandlerTest {
         when(session.isOpen()).thenReturn(true);
 
         Category category = new Category("category");
-        Product product = new Product("Test", "Short", "Full", 10.0f, "img", "123", "mail@test.com", category, LocalDateTime.now());
+        Product product = new Product("Test", "Short", "Full", 10.0f, "img", "123", "mail@test.com", category,
+                LocalDateTime.now());
 
         when(productRepository.findAll()).thenReturn(List.of(product));
 
@@ -68,7 +69,8 @@ class WebSocketHandlerTest {
         when(session2.isOpen()).thenReturn(false);
 
         Category category = new Category("category");
-        Product product = new Product("Test", "Short", "Full", 10.0f, "img", "123", "mail@test.com", category, LocalDateTime.now());
+        Product product = new Product("Test", "Short", "Full", 10.0f, "img", "123", "mail@test.com", category,
+                LocalDateTime.now());
         when(productRepository.findAll()).thenReturn(List.of(product));
 
         webSocketHandler.afterConnectionEstablished(session1);

@@ -20,7 +20,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @WebMvcTest(CategoryController.class)
 class CategoryControllerTest {
 
@@ -45,9 +44,7 @@ class CategoryControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/category/create")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
+        mockMvc.perform(post("/api/category/create").contentType(MediaType.APPLICATION_JSON).content(requestBody))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("Category has been successfully added"));
 
@@ -57,8 +54,7 @@ class CategoryControllerTest {
     @Test
     @DisplayName("POST /api/category/create returns 400 when service throws")
     void createCategory_failure() throws Exception {
-        when(categoryService.createCategory(any(Category.class)))
-                .thenThrow(new RuntimeException("DB error"));
+        when(categoryService.createCategory(any(Category.class))).thenThrow(new RuntimeException("DB error"));
 
         String requestBody = """
                 {
@@ -66,9 +62,7 @@ class CategoryControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/category/create")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
+        mockMvc.perform(post("/api/category/create").contentType(MediaType.APPLICATION_JSON).content(requestBody))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Error while adding product"));
     }
@@ -76,16 +70,12 @@ class CategoryControllerTest {
     @Test
     @DisplayName("GET /api/category/getAllCategories returns 200 and list of categories")
     void getAllCategories_success() throws Exception {
-        List<CategoryResponse> responses = List.of(
-                new CategoryResponse(1L, "Electronics"),
-                new CategoryResponse(2L, "Home")
-        );
+        List<CategoryResponse> responses = List.of(new CategoryResponse(1L, "Electronics"),
+                new CategoryResponse(2L, "Home"));
         when(categoryService.getAllCategories()).thenReturn(responses);
 
-        mockMvc.perform(get("/api/category/getAllCategories"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Electronics"))
+        mockMvc.perform(get("/api/category/getAllCategories")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2)).andExpect(jsonPath("$[0].name").value("Electronics"))
                 .andExpect(jsonPath("$[1].name").value("Home"));
 
         verify(categoryService).getAllCategories();

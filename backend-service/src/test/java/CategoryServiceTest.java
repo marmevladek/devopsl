@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-
 class CategoryServiceTest {
 
     @Mock
@@ -43,7 +42,7 @@ class CategoryServiceTest {
     @DisplayName("createCategory() сохраняет категорию и возвращает MessageResponse")
     void createCategory_success() {
         Category incoming = buildCategory(null, "Electronics");
-        Category saved    = buildCategory(1L,  "Electronics");
+        Category saved = buildCategory(1L, "Electronics");
 
         when(categoryRepository.save(any(Category.class))).thenReturn(saved);
 

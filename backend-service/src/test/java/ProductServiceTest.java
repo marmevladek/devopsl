@@ -23,28 +23,30 @@ import static org.mockito.Mockito.*;
 
 class ProductServiceTest {
 
-    @Mock private WebSocketHandler webSocketHandler;
-    @Mock private ProductRepository productRepository;
-    @Mock private CategoryRepository categoryRepository;
-    @Mock private RabbitTemplate rabbitTemplate;
+    @Mock
+    private WebSocketHandler webSocketHandler;
+    @Mock
+    private ProductRepository productRepository;
+    @Mock
+    private CategoryRepository categoryRepository;
+    @Mock
+    private RabbitTemplate rabbitTemplate;
 
-    @InjectMocks private ProductServiceImpl productService;
+    @InjectMocks
+    private ProductServiceImpl productService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
-
-
     private ProductRequest getSampleRequest() {
-        return new ProductRequest("Product", "Desc", "FullDesc", 10.0f,
-                "img.jpg", "1234567890", "test@mail.com", 1L);
+        return new ProductRequest("Product", "Desc", "FullDesc", 10.0f, "img.jpg", "1234567890", "test@mail.com", 1L);
     }
 
     private Product getSampleProduct(Category category) {
-        Product product = new Product("Product", "Desc", "FullDesc", 10.0f,
-                "img.jpg", "1234567890", "test@mail.com", category, LocalDateTime.now());
+        Product product = new Product("Product", "Desc", "FullDesc", 10.0f, "img.jpg", "1234567890", "test@mail.com",
+                category, LocalDateTime.now());
         ReflectionTestUtils.setField(product, "id", 1L);
         return product;
     }
@@ -66,7 +68,8 @@ class ProductServiceTest {
 
         assertEquals("Product has been successfully added", response.message());
         verify(webSocketHandler).sendProducts();
-        verify(rabbitTemplate).convertAndSend(eq("match-exchange"), eq("match-exchange.create-product"), any(ProductDTO.class));
+        verify(rabbitTemplate).convertAndSend(eq("match-exchange"), eq("match-exchange.create-product"),
+                any(ProductDTO.class));
     }
 
     @Test
@@ -90,7 +93,8 @@ class ProductServiceTest {
 
         assertEquals("Product has been successfully updated", response.message());
         verify(webSocketHandler).sendProducts();
-        verify(rabbitTemplate).convertAndSend(eq("match-exchange"), eq("match-exchange.update-product"), any(ProductDTO.class));
+        verify(rabbitTemplate).convertAndSend(eq("match-exchange"), eq("match-exchange.update-product"),
+                any(ProductDTO.class));
     }
 
     @Test
@@ -105,7 +109,8 @@ class ProductServiceTest {
         assertEquals("Product has been successfully deleted", response.message());
         verify(productRepository).delete(product);
         verify(webSocketHandler).sendProducts();
-        verify(rabbitTemplate).convertAndSend(eq("match-exchange"), eq("match-exchange.delete-product"), any(ProductDTO.class));
+        verify(rabbitTemplate).convertAndSend(eq("match-exchange"), eq("match-exchange.delete-product"),
+                any(ProductDTO.class));
     }
 
     @Test

@@ -36,23 +36,17 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding createProductBinding(Queue createProductQueue, TopicExchange matchExchange) {
-        return BindingBuilder.bind(createProductQueue)
-                .to(matchExchange)
-                .with("match-exchange.create-product");
+        return BindingBuilder.bind(createProductQueue).to(matchExchange).with("match-exchange.create-product");
     }
 
     @Bean
     public Binding updateProductBinding(Queue updateProductQueue, TopicExchange matchExchange) {
-        return BindingBuilder.bind(updateProductQueue)
-                .to(matchExchange)
-                .with("match-exchange.update-product");
+        return BindingBuilder.bind(updateProductQueue).to(matchExchange).with("match-exchange.update-product");
     }
 
     @Bean
     public Binding deleteProductBinding(Queue deleteProductQueue, TopicExchange matchExchange) {
-        return BindingBuilder.bind(deleteProductQueue)
-                .to(matchExchange)
-                .with("match-exchange.delete-product");
+        return BindingBuilder.bind(deleteProductQueue).to(matchExchange).with("match-exchange.delete-product");
     }
 
     @Bean

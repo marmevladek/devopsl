@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     private final RabbitTemplate rabbitTemplate;
 
     public ProductServiceImpl(WebSocketHandler webSocketHandler, ProductRepository productRepository,
-                              CategoryRepository categoryRepository, RabbitTemplate rabbitTemplate) {
+            CategoryRepository categoryRepository, RabbitTemplate rabbitTemplate) {
         this.webSocketHandler = webSocketHandler;
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
@@ -48,22 +48,11 @@ public class ProductServiceImpl implements ProductService {
 
         webSocketHandler.sendProducts();
 
-        rabbitTemplate.convertAndSend(
-                "match-exchange",
-                "match-exchange.create-product",
-                new ProductDTO(
-                        savedProduct.getId(),
-                        savedProduct.getName(),
-                        savedProduct.getDescription(),
-                        savedProduct.getFullDescription(),
-                        savedProduct.getPrice(),
-                        savedProduct.getLinkImage(),
-                        savedProduct.getPhoneNumber(),
-                        savedProduct.getEmail(),
-                        savedProduct.getCreatedAt(),
-                        category.getName()
-                )
-        );
+        rabbitTemplate.convertAndSend("match-exchange", "match-exchange.create-product",
+                new ProductDTO(savedProduct.getId(), savedProduct.getName(), savedProduct.getDescription(),
+                        savedProduct.getFullDescription(), savedProduct.getPrice(), savedProduct.getLinkImage(),
+                        savedProduct.getPhoneNumber(), savedProduct.getEmail(), savedProduct.getCreatedAt(),
+                        category.getName()));
 
         return new MessageResponse("Product has been successfully added");
     }
@@ -88,22 +77,11 @@ public class ProductServiceImpl implements ProductService {
 
         webSocketHandler.sendProducts();
 
-        rabbitTemplate.convertAndSend(
-                "match-exchange",
-                "match-exchange.update-product",
-                new ProductDTO(
-                        existingProduct.getId(),
-                        existingProduct.getName(),
-                        existingProduct.getDescription(),
-                        existingProduct.getFullDescription(),
-                        existingProduct.getPrice(),
-                        existingProduct.getLinkImage(),
-                        existingProduct.getPhoneNumber(),
-                        existingProduct.getEmail(),
-                        existingProduct.getCreatedAt(),
-                        existingProduct.getCategory().getName()
-                )
-        );
+        rabbitTemplate.convertAndSend("match-exchange", "match-exchange.update-product",
+                new ProductDTO(existingProduct.getId(), existingProduct.getName(), existingProduct.getDescription(),
+                        existingProduct.getFullDescription(), existingProduct.getPrice(),
+                        existingProduct.getLinkImage(), existingProduct.getPhoneNumber(), existingProduct.getEmail(),
+                        existingProduct.getCreatedAt(), existingProduct.getCategory().getName()));
 
         return new MessageResponse("Product has been successfully updated");
     }
@@ -121,22 +99,11 @@ public class ProductServiceImpl implements ProductService {
 
         webSocketHandler.sendProducts();
 
-        rabbitTemplate.convertAndSend(
-                "match-exchange",
-                "match-exchange.delete-product",
-                new ProductDTO(
-                        existingProduct.getId(),
-                        existingProduct.getName(),
-                        existingProduct.getDescription(),
-                        existingProduct.getFullDescription(),
-                        existingProduct.getPrice(),
-                        existingProduct.getLinkImage(),
-                        existingProduct.getPhoneNumber(),
-                        existingProduct.getEmail(),
-                        existingProduct.getCreatedAt(),
-                        existingProduct.getCategory().getName()
-                )
-        );
+        rabbitTemplate.convertAndSend("match-exchange", "match-exchange.delete-product",
+                new ProductDTO(existingProduct.getId(), existingProduct.getName(), existingProduct.getDescription(),
+                        existingProduct.getFullDescription(), existingProduct.getPrice(),
+                        existingProduct.getLinkImage(), existingProduct.getPhoneNumber(), existingProduct.getEmail(),
+                        existingProduct.getCreatedAt(), existingProduct.getCategory().getName()));
 
         return new MessageResponse("Product has been successfully deleted");
     }

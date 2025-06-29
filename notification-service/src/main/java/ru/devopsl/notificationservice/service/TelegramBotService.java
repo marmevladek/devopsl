@@ -26,24 +26,18 @@ public class TelegramBotService extends TelegramLongPollingBot {
         return botName;
     }
 
-
     public void sendNotification(long chatId, Notification notification) {
         sendMessage(chatId, notification.getText());
     }
 
     private void sendMessage(long chatId, String text) {
-        executeMessage(
-                SendMessage.builder()
-                        .chatId(chatId)
-                        .text(text)
-                        .build()
-        );
+        executeMessage(SendMessage.builder().chatId(chatId).text(text).build());
     }
 
     private void executeMessage(SendMessage message) {
         try {
             execute(message);
-        }  catch (TelegramApiException e) {
+        } catch (TelegramApiException e) {
             logger.error(e.getMessage(), e);
         }
     }

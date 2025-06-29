@@ -124,7 +124,7 @@ pipeline {
             steps {
                 script {
                     // Явное использование контекста minikube
-                    def KUBECONFIG = "/home/host/.kube/config"
+                    def KUBECONFIG = "/var/lib/jenkins/config"
                     
                     // Проверка доступности конфига
                     sh "ls -la ${KUBECONFIG} || true"

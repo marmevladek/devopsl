@@ -14,12 +14,13 @@ pipeline {
                     stage('Setup Node') {
                         steps {
                             echo "Using Node.js version ${NODE_VERSION}"
-                            // Пример с nvm (нужно, чтобы nvm был установлен на агенте)
                             sh """
-                                source ~/.nvm/nvm.sh
+                                bash -c '
+                                source /var/lib/jenkins/.nvm/nvm.sh
                                 nvm install ${NODE_VERSION}
                                 nvm use ${NODE_VERSION}
                                 node -v
+                                '
                             """
                         }
                     }

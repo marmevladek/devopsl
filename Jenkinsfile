@@ -1,55 +1,54 @@
 pipeline {
     agent any
     
+    options {
+        skipDefaultCheckout true // Отключаем автоматический checkout
+    }
+    
     triggers {
-        pollSCM('H/5 * * * *') // Проверять изменения каждые 5 минут
+        pollSCM('H/5 * * * *')
     }
     
     tools {
-        nodejs 'node18' // Предварительно нужно настроить NodeJS в Global Tool Configuration
-        nodejs 'node20' // Можно добавить несколько версий Node.js
+        nodejs 'node18' 
+        nodejs 'node20' 
         nodejs 'node22'
     }
     
     stages {
+        stage('Checkout') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    extensions: [],
+                    userRemoteConfigs: [[
+                        credentialsId: 'jenkins', // Укажите ваш credentials ID
+                        url: 'https://github.com/maximAdmakin/devopsL.git'
+                    ]]
+                ])
+            }
+        }
+        
         stage('Build and Test') {
             parallel {
                 stage('Build') {
-                    stages {
-                        stage('Build Node 18') {
-                            steps {
-                                script {
-                                    nodejs('node18') {
-                                        checkout scm
-                                        dir('front-service') {
-                                            sh 'npm ci'
-                                            sh 'npm run build --if-present'
-                                        }
-                                    }
-                                }
+                    matrix {
+                        axes {
+                            axis {
+                                name 'NODE_VERSION'
+                                values 'node18', 'node20', 'node22'
                             }
                         }
-                        stage('Build Node 20') {
-                            steps {
-                                script {
-                                    nodejs('node20') {
-                                        checkout scm
-                                        dir('front-service') {
-                                            sh 'npm ci'
-                                            sh 'npm run build --if-present'
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        stage('Build Node 22') {
-                            steps {
-                                script {
-                                    nodejs('node22') {
-                                        checkout scm
-                                        dir('front-service') {
-                                            sh 'npm ci'
-                                            sh 'npm run build --if-present'
+                        stages {
+                            stage('Build') {
+                                steps {
+                                    script {
+                                        nodejs(NODE_VERSION) {
+                                            dir('front-service') {
+                                                sh 'npm ci'
+                                                sh 'npm run build --if-present'
+                                            }
                                         }
                                     }
                                 }
@@ -59,41 +58,22 @@ pipeline {
                 }
                 
                 stage('Test') {
-                    stages {
-                        stage('Test Node 18') {
-                            steps {
-                                script {
-                                    nodejs('node18') {
-                                        checkout scm
-                                        dir('front-service') {
-                                            sh 'npm ci'
-                                            sh 'npm test'
-                                        }
-                                    }
-                                }
+                    matrix {
+                        axes {
+                            axis {
+                                name 'NODE_VERSION'
+                                values 'node18', 'node20', 'node22'
                             }
                         }
-                        stage('Test Node 20') {
-                            steps {
-                                script {
-                                    nodejs('node20') {
-                                        checkout scm
-                                        dir('front-service') {
-                                            sh 'npm ci'
-                                            sh 'npm test'
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        stage('Test Node 22') {
-                            steps {
-                                script {
-                                    nodejs('node22') {
-                                        checkout scm
-                                        dir('front-service') {
-                                            sh 'npm ci'
-                                            sh 'npm test'
+                        stages {
+                            stage('Test') {
+                                steps {
+                                    script {
+                                        nodejs(NODE_VERSION) {
+                                            dir('front-service') {
+                                                sh 'npm ci'
+                                                sh 'npm test'
+                                            }
                                         }
                                     }
                                 }

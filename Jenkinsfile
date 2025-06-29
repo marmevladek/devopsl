@@ -124,11 +124,11 @@ pipeline {
             steps {
                 script {
 
-                    // Обновляем образ в deployment (принудительный триггер обновления)
-                    sh "kubectl set image deployment/frontend frontend=${IMAGE_NAME}:latest --record"
-                    
-                    // Ждем успешного развертывания
-                    sh 'kubectl rollout status deployment/frontend --timeout=120s'
+                    sh '''
+                      minikube kubectl -- set image deployment/front-service \
+                        front-service=${IMAGE_NAME}
+                      minikube kubectl -- rollout status deployment/front-service --timeout=120s
+                    '''
                 }
             }
         }

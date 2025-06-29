@@ -87,20 +87,36 @@ pipeline {
             }
         }
         
-        stage('Docker Build and Push') {
-            // Убрали условие when, так как оно вызывало ошибку
-            environment {
-                DOCKER_HUB_USERNAME = credentials('DOCKER_HUB_USERNAME')
-                DOCKER_HUB_TOKEN = credentials('DOCKER_HUB_TOKEN')
+    stage('Docker Build and Push') {
+        agent {
+            docker {
+                image 'docker:dind'
+                args '--privileged --network=host -v /var/run/docker.sock:/var/run/docker.sock'
+                reuseNode true
             }
-            steps {
-                script {
-                    // Установка Docker Buildx
-                    sh 'docker buildx create --use --name mybuilder || true'
-                    sh 'docker buildx inspect --bootstrap || true'
+        }
+        environment {
+            DOCKER_HUB_USERNAME = credentials('DOCKER_HUB_USERNAME')
+            DOCKER_HUB_TOKEN = credentials('DOCKER_HUB_TOKEN')
+        }
+        steps {
+            script {
+                // Безопасный способ передачи credentials
+                withCredentials([usernamePassword(
+                    credentialsId: 'DOCKER_HUB_CREDS',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    // Настройка Buildx
+                    sh '''
+                    docker buildx create --use --name mybuilder || true
+                    docker buildx inspect --bootstrap || true
+                    '''
                     
-                    // Логин в Docker Hub
-                    sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin"
+                    // Логин в Docker Hub (безопасный способ)
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    '''
                     
                     // Сборка и пуш образа
                     dir('front-service') {

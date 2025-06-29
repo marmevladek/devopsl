@@ -87,51 +87,43 @@ pipeline {
             }
         }
         
-        stage('Docker Build and Push') {
+        stage('docker') {
             agent {
-                docker {
-                    image 'docker:dind'
-                    args '--privileged --network=host -v /var/run/docker.sock:/var/run/docker.sock'
-                    reuseNode true
-                }
+                label 'ubuntu-latest'
+            }
+            needs: ['test']  // Явная зависимость от этапа test
+            environment {
+                // Используем переменные, которые уже определены в Jenkins
+                DOCKER_USER = "${env.DOCKER_HUB_USERNAME}"
+                DOCKER_TOKEN = "${env.DOCKER_HUB_TOKEN}"
             }
             steps {
-                script {
-                    withCredentials([usernamePassword(
-                        credentialsId: 'DOCKER_HUB_CREDS',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
-                    )]) {
-                        // Настройка Buildx
-                        sh '''
-                        docker buildx create --use --name mybuilder || true
-                        docker buildx inspect --bootstrap || true
-                        '''
-                        
-                        // Логин в Docker Hub
-                        sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        '''
-                        
-                        // Сборка и пуш образа
-                        dir('front-service') {
-                            sh '''
-                            docker buildx build \
-                                --platform linux/amd64,linux/arm64 \
-                                -t marmevladek/devopsl-frontend:latest \
-                                --push \
-                                .
-                            '''
-                        }
-                        
-                        // Выход из Docker Hub
-                        sh 'docker logout'
-                    }
-                }
+                // 1. Получение кода из репозитория
+                checkout scm
+        
+                // 2. Настройка Buildx (если требуется)
+                sh 'docker buildx create --use --name mybuilder || true'
+                sh 'docker buildx inspect --bootstrap'
+        
+                // 3. Логин в Docker Hub с использованием ВАШИХ переменных
+                sh '''
+                    echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
+                '''
+        
+                // 4. Сборка и загрузка образа
+                sh '''
+                    docker buildx build \
+                        --push \
+                        --platform linux/amd64,linux/arm64 \
+                        -t marmevladek/devopsl-frontend:latest \
+                        -f ./front-service/Dockerfile \
+                        ./front-service
+                '''
             }
             post {
                 always {
-                    sh 'docker buildx rm mybuilder || true'
+                    // Очистка после выполнения
+                    sh 'docker logout'
                 }
             }
         }

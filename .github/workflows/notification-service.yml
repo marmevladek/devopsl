@@ -38,6 +38,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('notification-service/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build and analyze
+        working-directory: notification-service
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}

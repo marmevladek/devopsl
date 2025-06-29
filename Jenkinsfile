@@ -91,7 +91,6 @@ pipeline {
             agent {
                 label 'ubuntu-latest'
             }
-            needs: ['test']  // Явная зависимость от этапа test
             environment {
                 // Используем переменные, которые уже определены в Jenkins
                 DOCKER_USER = "${env.DOCKER_HUB_USERNAME}"

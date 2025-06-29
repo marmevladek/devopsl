@@ -88,9 +88,7 @@ pipeline {
         }
         
         stage('Docker Build and Push') {
-            when {
-                expression { return !matrix } // Чтобы не дублировать в матрице
-            }
+            // Убрали условие when, так как оно вызывало ошибку
             environment {
                 DOCKER_HUB_USERNAME = credentials('DOCKER_HUB_USERNAME')
                 DOCKER_HUB_TOKEN = credentials('DOCKER_HUB_TOKEN')

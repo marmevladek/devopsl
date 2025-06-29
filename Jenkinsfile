@@ -48,7 +48,6 @@ pipeline {
                         steps {
                             nodejs(NODE_VERSION) {
                                 script {
-                                    // Удаляем node_modules и package-lock.json для чистоты
                                     sh 'rm -rf node_modules package-lock.json || true'
                                 }
                             }
@@ -59,7 +58,6 @@ pipeline {
                         steps {
                             nodejs(NODE_VERSION) {
                                 dir('front-service') {
-                                    // Используем npm install вместо npm ci для большей устойчивости
                                     sh 'npm install --no-audit --no-fund'
                                 }
                             }
@@ -85,6 +83,40 @@ pipeline {
                             }
                         }
                     }
+                }
+            }
+        }
+        
+        stage('Docker Build and Push') {
+            when {
+                expression { return !matrix } // Чтобы не дублировать в матрице
+            }
+            environment {
+                DOCKER_HUB_USERNAME = credentials('DOCKER_HUB_USERNAME')
+                DOCKER_HUB_TOKEN = credentials('DOCKER_HUB_TOKEN')
+            }
+            steps {
+                script {
+                    // Установка Docker Buildx
+                    sh 'docker buildx create --use --name mybuilder || true'
+                    sh 'docker buildx inspect --bootstrap || true'
+                    
+                    // Логин в Docker Hub
+                    sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin"
+                    
+                    // Сборка и пуш образа
+                    dir('front-service') {
+                        sh '''
+                        docker buildx build \
+                            --platform linux/amd64,linux/arm64 \
+                            -t marmevladek/devopsl-frontend:latest \
+                            --push \
+                            .
+                        '''
+                    }
+                    
+                    // Выход из Docker Hub
+                    sh 'docker logout'
                 }
             }
         }

@@ -120,7 +120,7 @@ pipeline {
         stage('Deploy to Minikube') {
             environment {
                 IMAGE_NAME = 'marmevladek/devopsl-frontend:latest'
-                KUBECONFIG = "${env.HOME}/.kube/config"   // подстраховка
+                KUBECONFIG = "~/.kube/config"   // подстраховка
             }
             steps {
                 sh '''

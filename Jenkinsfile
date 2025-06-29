@@ -2,50 +2,59 @@ pipeline {
     agent none
     
     triggers {
-        pollSCM('* * * * *') // Опционально: опрашивать SCM на изменения
+        pollSCM('H/5 * * * *') // Проверять изменения каждые 5 минут
     }
     
     stages {
         stage('Build and Test') {
             parallel {
                 stage('Build') {
-                    agent {
-                        docker {
-                            image 'node:latest'
-                            args '-u root'
-                            reuseNode true
-                        }
-                    }
                     stages {
-                        stage('Checkout') {
+                        stage('Build Node 18') {
+                            agent {
+                                docker {
+                                    image 'node:18'
+                                    args '-u root'
+                                    reuseNode true
+                                }
+                            }
                             steps {
                                 checkout scm
+                                dir('front-service') {
+                                    sh 'npm ci'
+                                    sh 'npm run build --if-present'
+                                }
                             }
                         }
-                        stage('Build Matrix') {
-                            matrix {
-                                axes {
-                                    axis {
-                                        name 'NODE_VERSION'
-                                        values '18', '20', '22'
-                                    }
+                        stage('Build Node 20') {
+                            agent {
+                                docker {
+                                    image 'node:20'
+                                    args '-u root'
+                                    reuseNode true
                                 }
-                                agent {
-                                    docker {
-                                        image "node:\${NODE_VERSION}"
-                                        args '-u root'
-                                        reuseNode true
-                                    }
+                            }
+                            steps {
+                                checkout scm
+                                dir('front-service') {
+                                    sh 'npm ci'
+                                    sh 'npm run build --if-present'
                                 }
-                                stages {
-                                    stage('Build') {
-                                        steps {
-                                            dir('front-service') {
-                                                sh 'npm ci'
-                                                sh 'npm run build --if-present'
-                                            }
-                                        }
-                                    }
+                            }
+                        }
+                        stage('Build Node 22') {
+                            agent {
+                                docker {
+                                    image 'node:22'
+                                    args '-u root'
+                                    reuseNode true
+                                }
+                            }
+                            steps {
+                                checkout scm
+                                dir('front-service') {
+                                    sh 'npm ci'
+                                    sh 'npm run build --if-present'
                                 }
                             }
                         }
@@ -53,43 +62,52 @@ pipeline {
                 }
                 
                 stage('Test') {
-                    agent {
-                        docker {
-                            image 'node:latest'
-                            args '-u root'
-                            reuseNode true
-                        }
-                    }
                     stages {
-                        stage('Checkout') {
+                        stage('Test Node 18') {
+                            agent {
+                                docker {
+                                    image 'node:18'
+                                    args '-u root'
+                                    reuseNode true
+                                }
+                            }
                             steps {
                                 checkout scm
+                                dir('front-service') {
+                                    sh 'npm ci'
+                                    sh 'npm test'
+                                }
                             }
                         }
-                        stage('Test Matrix') {
-                            matrix {
-                                axes {
-                                    axis {
-                                        name 'NODE_VERSION'
-                                        values '18', '20', '22'
-                                    }
+                        stage('Test Node 20') {
+                            agent {
+                                docker {
+                                    image 'node:20'
+                                    args '-u root'
+                                    reuseNode true
                                 }
-                                agent {
-                                    docker {
-                                        image "node:\${NODE_VERSION}"
-                                        args '-u root'
-                                        reuseNode true
-                                    }
+                            }
+                            steps {
+                                checkout scm
+                                dir('front-service') {
+                                    sh 'npm ci'
+                                    sh 'npm test'
                                 }
-                                stages {
-                                    stage('Test') {
-                                        steps {
-                                            dir('front-service') {
-                                                sh 'npm ci'
-                                                sh 'npm test'
-                                            }
-                                        }
-                                    }
+                            }
+                        }
+                        stage('Test Node 22') {
+                            agent {
+                                docker {
+                                    image 'node:22'
+                                    args '-u root'
+                                    reuseNode true
+                                }
+                            }
+                            steps {
+                                checkout scm
+                                dir('front-service') {
+                                    sh 'npm ci'
+                                    sh 'npm test'
                                 }
                             }
                         }

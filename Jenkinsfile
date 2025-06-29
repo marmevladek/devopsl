@@ -105,7 +105,7 @@ pipeline {
                     // Логин в Docker Hub
                     sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin"
         
-                    // Настройка Buildx (если buildx не настроен)
+                    // Настройка Buildx (если buildx не настроен)1
                     sh '''
                         docker buildx create --use --name mybuilder || true
                         docker buildx inspect mybuilder --bootstrap

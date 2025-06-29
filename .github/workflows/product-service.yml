@@ -14,6 +14,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Build
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,6 +39,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    name: Test
     needs: build
     steps:
       - name: Checkout code
@@ -93,6 +95,7 @@ jobs:
   docker-image:
     runs-on: ubuntu-latest
     needs: sonar
+    name: Docker Image
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

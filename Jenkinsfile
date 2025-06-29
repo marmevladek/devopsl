@@ -87,47 +87,52 @@ pipeline {
             }
         }
         
-        stage('docker') {
-            agent any
+        stage('Build and Push Docker Image') {
             environment {
-                DOCKER_USER = "${env.DOCKER_HUB_USERNAME}"
-                DOCKER_TOKEN = "${env.DOCKER_HUB_TOKEN}"
+                DOCKER_HUB_USERNAME = credentials('DOCKER_HUB_USERNAME')
+                DOCKER_HUB_TOKEN = credentials('DOCKER_HUB_TOKEN')
+                IMAGE_NAME = 'marmevladek/devopsl-frontend'
             }
             steps {
-                checkout scm
+                script {
+                    def platforms = ['linux/amd64', 'linux/arm64']
+                    def buildCommand = "docker buildx build " +
+                                       "--platform ${platforms.join(',')} " +
+                                       "--file ./front-service/Dockerfile " +
+                                       "--tag ${IMAGE_NAME}:latest " +
+                                       "--push ./front-service"
         
-                // Проверка доступности Docker
-                sh 'docker --version'
+                    // Логин в Docker Hub
+                    sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin"
         
-                // Настройка Buildx (с обработкой ошибок)
-                sh '''
-                    docker buildx create --use --name mybuilder || true
-                    docker buildx inspect --bootstrap
-                '''
+                    // Настройка Buildx (если buildx не настроен)1
+                    sh '''
+                        docker buildx create --use --name mybuilder || true
+                        docker buildx inspect mybuilder --bootstrap
+                    '''
         
-                // Логин в Docker Hub
-                sh '''
-                    echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
-                '''
-        
-                // Сборка и загрузка образаaaaa
-                sh '''
-                    docker buildx build \
-                        --push \
-                        --platform linux/amd64,linux/arm64 \
-                        -t marmevladek/devopsl-frontend:latest \
-                        -f ./front-service/Dockerfile \
-                        ./front-service
-                '''
+                    // Сборка и пуш образа
+                    sh buildCommand
+                }
             }
-            post {
-                always {
-                    sh 'docker logout'
+        }
+
+        stage('Deploy to Minikube') {
+            environment {
+                IMAGE_NAME = 'marmevladek/devopsl-frontend'
+            }
+            steps {
+                script {
+
+                    sh '''
+                      minikube kubectl -- set image deployment/front-service \
+                        front-service=${IMAGE_NAME}
+                      minikube kubectl -- rollout status deployment/front-service --timeout=120s
+                    '''
                 }
             }
         }
     }
-    
     post {
         always {
             cleanWs()

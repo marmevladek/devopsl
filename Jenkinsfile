@@ -118,6 +118,9 @@ pipeline {
         }
 
         stage('Deploy to Minikube') {
+            environment {
+                IMAGE_NAME = 'marmevladek/devopsl-frontend'
+            }
             steps {
                 script {
 

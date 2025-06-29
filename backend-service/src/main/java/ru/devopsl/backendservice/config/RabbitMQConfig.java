@@ -1,6 +1,5 @@
 package ru.devopsl.backendservice.config;
 
-
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

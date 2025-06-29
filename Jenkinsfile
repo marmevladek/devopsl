@@ -125,7 +125,7 @@ pipeline {
             steps {
                 sh '''
                     echo "=== Проверяем соединение с кластером ==="
-                    kubectl version --short
+                    kubectl version
         
                     echo "=== Обновляем образ в Deployment ==="
                     kubectl set image deployment/front-service front-service=${IMAGE_NAME}

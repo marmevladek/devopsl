@@ -88,10 +88,7 @@ pipeline {
         }
         
         stage('docker') {
-            agent {
-                // Используйте существующие метки ваших агентов
-                label 'docker || linux || master' 
-            }
+            agent any
             environment {
                 DOCKER_USER = "${env.DOCKER_HUB_USERNAME}"
                 DOCKER_TOKEN = "${env.DOCKER_HUB_TOKEN}"

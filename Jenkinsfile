@@ -120,19 +120,34 @@ pipeline {
         stage('Deploy to Minikube') {
             environment {
                 IMAGE_NAME = 'marmevladek/devopsl-frontend:latest'
-                KUBECONFIG = "~/.kube/config"   // подстраховка
             }
             steps {
-                sh '''
-                    echo "=== Проверяем соединение с кластером ==="
-                    kubectl version
-        
-                    echo "=== Обновляем образ в Deployment ==="
-                    kubectl set image deployment/front-service front-service=${IMAGE_NAME}
-        
-                    echo "=== Ожидаем завершения rollout ==="
-                    kubectl rollout status deployment/front-service --timeout=120s
-                '''
+                script {
+                    // Явное использование контекста minikube
+                    def KUBECONFIG = "/home/host/.kube/config"
+                    
+                    // Проверка доступности конфига
+                    sh "ls -la ${KUBECONFIG} || true"
+                    
+                    // Проверка соединения с кластером
+                    sh """
+                        echo "=== Проверяем соединение с кластером ==="
+                        kubectl --kubeconfig=${KUBECONFIG} cluster-info
+                        kubectl --kubeconfig=${KUBECONFIG} get nodes
+                    """
+                    
+                    // Обновляем образ в Deployment
+                    sh """
+                        echo "=== Обновляем образ в Deployment ==="
+                        kubectl --kubeconfig=${KUBECONFIG} set image deployment/front-service front-service=${IMAGE_NAME} 
+                    """
+                    
+                    // Ожидаем завершения rollout
+                    sh """
+                        echo "=== Ожидаем завершения rollout ==="
+                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/front-service --timeout=120s
+                    """
+                }
             }
         }
 

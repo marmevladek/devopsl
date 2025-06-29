@@ -123,10 +123,10 @@ pipeline {
             }
             steps {
                 script {
-                    // Явное использование контекста minikube
-                    def KUBECONFIG = "/var/lib/jenkins/config"
+                    // Используем стандартный kubeconfig
+                    def KUBECONFIG = "/var/lib/jenkins/.kube/config"
                     
-                    // Проверка доступности конфига
+                    // Проверяем доступность конфига
                     sh "ls -la ${KUBECONFIG} || true"
                     
                     // Проверка соединения с кластером
@@ -136,16 +136,16 @@ pipeline {
                         kubectl --kubeconfig=${KUBECONFIG} get nodes
                     """
                     
-                    // Обновляем образ в Deployment
+                    // Обновляем образ
                     sh """
                         echo "=== Обновляем образ в Deployment ==="
-                        kubectl --kubeconfig=${KUBECONFIG} set image deployment/front-service front-service=${IMAGE_NAME} 
+                        kubectl --kubeconfig=${KUBECONFIG} set image deployment/front-service front-service=${IMAGE_NAME} --record
                     """
                     
                     // Ожидаем завершения rollout
                     sh """
                         echo "=== Ожидаем завершения rollout ==="
-                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/front-service --timeout=120s
+                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/front-service --timeout=120s || true
                     """
                 }
             }

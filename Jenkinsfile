@@ -1,6 +1,5 @@
 pipeline {
-    agent any
-
+    agent none
     stages {
         stage('Build and Test Matrix') {
             matrix {
@@ -10,20 +9,14 @@ pipeline {
                         values '18', '20', '22'
                     }
                 }
-                stages {
-                    stage('Setup Node') {
-                        steps {
-                            echo "Using Node.js version ${NODE_VERSION}"
-                            sh """
-                                bash -c '
-                                source /var/lib/jenkins/.nvm/nvm.sh
-                                nvm install ${NODE_VERSION}
-                                nvm use ${NODE_VERSION}
-                                node -v
-                                '
-                            """
-                        }
+                agent {
+                    docker {
+                        image "node:${NODE_VERSION}"
+                        label 'docker' // если нужно, чтобы запускался на узле с докером
+                        args '-u root:root' // если нужны права root
                     }
+                }
+                stages {
                     stage('Install Dependencies') {
                         steps {
                             dir('front-service') {

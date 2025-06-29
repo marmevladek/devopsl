@@ -1,8 +1,14 @@
 pipeline {
-    agent none
+    agent any
     
     triggers {
         pollSCM('H/5 * * * *') // Проверять изменения каждые 5 минут
+    }
+    
+    tools {
+        nodejs 'node18' // Предварительно нужно настроить NodeJS в Global Tool Configuration
+        nodejs 'node20' // Можно добавить несколько версий Node.js
+        nodejs 'node22'
     }
     
     stages {
@@ -11,50 +17,41 @@ pipeline {
                 stage('Build') {
                     stages {
                         stage('Build Node 18') {
-                            agent {
-                                docker {
-                                    image 'node:18'
-                                    args '-u root'
-                                    reuseNode true
-                                }
-                            }
                             steps {
-                                checkout scm
-                                dir('front-service') {
-                                    sh 'npm ci'
-                                    sh 'npm run build --if-present'
+                                script {
+                                    nodejs('node18') {
+                                        checkout scm
+                                        dir('front-service') {
+                                            sh 'npm ci'
+                                            sh 'npm run build --if-present'
+                                        }
+                                    }
                                 }
                             }
                         }
                         stage('Build Node 20') {
-                            agent {
-                                docker {
-                                    image 'node:20'
-                                    args '-u root'
-                                    reuseNode true
-                                }
-                            }
                             steps {
-                                checkout scm
-                                dir('front-service') {
-                                    sh 'npm ci'
-                                    sh 'npm run build --if-present'
+                                script {
+                                    nodejs('node20') {
+                                        checkout scm
+                                        dir('front-service') {
+                                            sh 'npm ci'
+                                            sh 'npm run build --if-present'
+                                        }
+                                    }
                                 }
                             }
                         }
                         stage('Build Node 22') {
-                            agent {
-                                docker {
-                                    image 'node:22'
-                                    args '-u root'
-                                    reuseNode true
-                                }
-                            }
                             steps {
-                                checkout scm
-                                dir('front-service') {
-                                    sh 'npm ci'
-                                    sh 'npm run build --if-present'
+                                script {
+                                    nodejs('node22') {
+                                        checkout scm
+                                        dir('front-service') {
+                                            sh 'npm ci'
+                                            sh 'npm run build --if-present'
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -64,50 +61,41 @@ pipeline {
                 stage('Test') {
                     stages {
                         stage('Test Node 18') {
-                            agent {
-                                docker {
-                                    image 'node:18'
-                                    args '-u root'
-                                    reuseNode true
-                                }
-                            }
                             steps {
-                                checkout scm
-                                dir('front-service') {
-                                    sh 'npm ci'
-                                    sh 'npm test'
+                                script {
+                                    nodejs('node18') {
+                                        checkout scm
+                                        dir('front-service') {
+                                            sh 'npm ci'
+                                            sh 'npm test'
+                                        }
+                                    }
                                 }
                             }
                         }
                         stage('Test Node 20') {
-                            agent {
-                                docker {
-                                    image 'node:20'
-                                    args '-u root'
-                                    reuseNode true
-                                }
-                            }
                             steps {
-                                checkout scm
-                                dir('front-service') {
-                                    sh 'npm ci'
-                                    sh 'npm test'
+                                script {
+                                    nodejs('node20') {
+                                        checkout scm
+                                        dir('front-service') {
+                                            sh 'npm ci'
+                                            sh 'npm test'
+                                        }
+                                    }
                                 }
                             }
                         }
                         stage('Test Node 22') {
-                            agent {
-                                docker {
-                                    image 'node:22'
-                                    args '-u root'
-                                    reuseNode true
-                                }
-                            }
                             steps {
-                                checkout scm
-                                dir('front-service') {
-                                    sh 'npm ci'
-                                    sh 'npm test'
+                                script {
+                                    nodejs('node22') {
+                                        checkout scm
+                                        dir('front-service') {
+                                            sh 'npm ci'
+                                            sh 'npm test'
+                                        }
+                                    }
                                 }
                             }
                         }

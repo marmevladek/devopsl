@@ -61,5 +61,38 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Minikube') {
+            environment {
+                IMAGE_NAME = 'marmevladek/devopsl-backend:latest'
+            }
+            steps {
+                script {
+                    def KUBECONFIG = "/var/lib/jenkins/.kube/config"
+        
+                    // Проверка наличия kubeconfig
+                    sh "ls -la ${KUBECONFIG} || true"
+        
+                    // Проверка соединения с кластером
+                    sh """
+                        echo "=== Проверяем соединение с кластером ==="
+                        kubectl --kubeconfig=${KUBECONFIG} cluster-info
+                        kubectl --kubeconfig=${KUBECONFIG} get nodes
+                    """
+        
+                    // Обновляем образ в Deployment backend-service
+                    sh """
+                        echo "=== Обновляем образ в Deployment ==="
+                        kubectl --kubeconfig=${KUBECONFIG} set image deployment/backend-service backend-service=${IMAGE_NAME} --record
+                    """
+        
+                    // Ждем окончания раскатки
+                    sh """
+                        echo "=== Ожидаем завершения rollout ==="
+                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/backend-service --timeout=120s || true
+                    """
+                }
+            }
+        }
     }
 }

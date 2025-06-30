@@ -3,7 +3,7 @@ pipeline {
     tools {                          // предварительно добавьте в «Global Tool Configuration»
         jdk   'jdk17'               // Temurin 17 (или другое имя, если задали своё)
         maven 'maven3'              // Maven 3.x
-        sonarScanner 'SonarQubeScanner'
+        sonarQubeScanner 'SonarQubeScanner'
     }
 
     environment {

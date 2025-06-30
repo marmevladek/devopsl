@@ -124,16 +124,13 @@ pipeline {
                                        "--tag ${IMAGE_NAME}:latest " +
                                        "--push ./front-service"
         
-                    // Логин в Docker Hub
                     sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin"
         
-                    // Настройка Buildx (если buildx не настроен)1
                     sh '''
                         docker buildx create --use --name mybuilder || true
                         docker buildx inspect mybuilder --bootstrap
                     '''
         
-                    // Сборка и пуш образа
                     sh buildCommand
                 }
             }
@@ -145,23 +142,19 @@ pipeline {
             }
             steps {
                 script {
-                    // Используем стандартный kubeconfig
                     def KUBECONFIG = "/var/lib/jenkins/.kube/config"
                     
-                    // Проверка соединения с кластером
                     sh """
                         echo "=== Проверяем соединение с кластером ==="
                         kubectl --kubeconfig=${KUBECONFIG} cluster-info
                         kubectl --kubeconfig=${KUBECONFIG} get nodes
                     """
                     
-                    // Обновляем образ
                     sh """
                         echo "=== Обновляем образ в Deployment ==="
                         kubectl --kubeconfig=${KUBECONFIG} set image deployment/front-service front-service=${IMAGE_NAME} --record
                     """
                     
-                    // Ожидаем завершения rollout
                     sh """
                         echo "=== Ожидаем завершения rollout ==="
                         kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/front-service --timeout=120s

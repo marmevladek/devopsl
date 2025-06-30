@@ -9,6 +9,7 @@ pipeline {
         IMAGE_NAME        = 'marmevladek/devopsl-backend'
         DOCKER_HUB_USER   = credentials('DOCKER_HUB_USERNAME')
         DOCKER_HUB_TOKEN  = credentials('DOCKER_HUB_TOKEN')
+        SONAR_TOKEN       = credentials('SONAR_TOKEN')
     }
 
     stages {
@@ -36,30 +37,85 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                dir('backend-service') {
+                    withSonarQubeEnv('SonarQubeServer') {
+                        sh """
+                            mvn clean verify sonar:sonar \
+                              -Dsonar.projectKey=devopsl-backend \
+                              -Dsonar.projectName='devopsl-backend'
+                        """
+                    }
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
         stage('Build & Push Docker Image') {
+                    steps {
+                        script {
+                            def platforms = ['linux/amd64', 'linux/arm64']
+        
+                            // логин в Docker Hub
+                            sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USER} --password-stdin"
+        
+                            // инициализация buildx (разово)
+                            sh '''
+                                docker buildx create --use --name mybuilder || true
+                                docker buildx inspect mybuilder --bootstrap
+                            '''
+        
+                            // сборка и пуш
+                            sh """
+                                docker buildx build \
+                                  --platform ${platforms.join(',')} \
+                                  --file ./backend-service/Dockerfile \
+                                  --tag ${IMAGE_NAME}:latest \
+                                  --push ./backend-service
+                            """
+                        }
+                    }
+                }
+
+        stage('Deploy to Minikube') {
+            environment {
+                IMAGE_NAME = 'marmevladek/devopsl-backend:latest'
+            }
             steps {
                 script {
-                    def platforms = ['linux/amd64', 'linux/arm64']
-
-                    // логин в Docker Hub
-                    sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USER} --password-stdin"
-
-                    // инициализация buildx (разово)
-                    sh '''
-                        docker buildx create --use --name mybuilder || true
-                        docker buildx inspect mybuilder --bootstrap
-                    '''
-
-                    // сборка и пуш
+                    def KUBECONFIG = "/var/lib/jenkins/.kube/config"
+        
+                    // Проверка наличия kubeconfig
+                    sh "ls -la ${KUBECONFIG}  true"
+        
+                    // Проверка соединения с кластером
                     sh """
-                        docker buildx build \
-                          --platform ${platforms.join(',')} \
-                          --file ./backend-service/Dockerfile \
-                          --tag ${IMAGE_NAME}:latest \
-                          --push ./backend-service
+                        echo "=== Проверяем соединение с кластером ==="
+                        kubectl --kubeconfig=${KUBECONFIG} cluster-info
+                        kubectl --kubeconfig=${KUBECONFIG} get nodes
+                    """
+        
+                    // Обновляем образ в Deployment backend-service
+                    sh """
+                        echo "=== Обновляем образ в Deployment ==="
+                        kubectl --kubeconfig=${KUBECONFIG} set image deployment/backend-service backend-service=${IMAGE_NAME} --record
+                    """
+        
+                    // Ждем окончания раскатки
+                    sh """
+                        echo "=== Ожидаем завершения rollout ==="
+                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/backend-service --timeout=120s  true
                     """
                 }
             }
         }
+
     }
 }

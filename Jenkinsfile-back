@@ -84,7 +84,7 @@ pipeline {
                     // Ждем окончания раскатки
                     sh """
                         echo "=== Ожидаем завершения rollout ==="
-                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/backend-service --timeout=120s  true
+                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/backend-service --timeout=120s
                     """
                 }
             }

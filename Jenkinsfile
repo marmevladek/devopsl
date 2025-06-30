@@ -92,6 +92,8 @@ pipeline {
                 dir('front-service') {
                     withSonarQubeEnv('SonarQubeServer') {
                         sh """
+                            npm ci
+                        
                             sonar-scanner \
                               -Dsonar.projectKey=devopsl-frontend \
                               -Dsonar.projectName='devopsl-frontend'

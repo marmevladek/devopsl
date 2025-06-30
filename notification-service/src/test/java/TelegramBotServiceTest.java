@@ -53,12 +53,7 @@ class TelegramBotServiceTest {
     void executeMessage_handlesException() throws Exception {
         doThrow(new TelegramApiException("Boom")).when(botSpy).execute(any(SendMessage.class));
 
-        assertDoesNotThrow(() ->
-                ReflectionTestUtils.invokeMethod(
-                        botSpy,
-                        "executeMessage",
-                        SendMessage.builder().chatId(1L).text("test").build()
-                )
-        );
+        assertDoesNotThrow(() -> ReflectionTestUtils.invokeMethod(botSpy, "executeMessage",
+                SendMessage.builder().chatId(1L).text("test").build()));
     }
 }

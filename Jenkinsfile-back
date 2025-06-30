@@ -92,9 +92,6 @@ pipeline {
                 script {
                     def KUBECONFIG = "/var/lib/jenkins/.kube/config"
         
-                    // Проверка наличия kubeconfig
-                    sh "ls -la ${KUBECONFIG}  true"
-        
                     // Проверка соединения с кластером
                     sh """
                         echo "=== Проверяем соединение с кластером ==="

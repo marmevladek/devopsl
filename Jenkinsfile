@@ -94,9 +94,7 @@ pipeline {
                         sh """
                             npm ci
                         
-                            sonar-scanner \
-                              -Dsonar.projectKey=devopsl-frontend \
-                              -Dsonar.projectName='devopsl-frontend'
+                            npm run sonar -- -Dsonar.projectKey=devopsl-frontend -Dsonar.projectName=devopsl-frontend
                         """
                     }
                 }

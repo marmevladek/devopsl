@@ -1,22 +1,21 @@
-# Используем официальный образ Node.js
 FROM node:18
 
-# Устанавливаем рабочую директорию внутри контейнера
+# Установить Java (OpenJDK 11), необходимую для sonar-scanner
+RUN apt-get update && apt-get install -y openjdk-17-jre-headless && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Копируем package.json и package-lock.json (если есть)
 COPY package*.json ./
-
 COPY sonar-project.properties . 
 
-# Устанавливаем зависимости с использованием npm ci
 RUN npm ci
 
-# Копируем весь исходный код в контейнер
 COPY . .
 
-# Запускаем сборку (если у вас есть скрипт build в package.json)
 RUN npm run build
 
-# По умолчанию запускаем приложение (например, start)
+# Установим sonar-scanner CLI глобально
+RUN npm install -g sonar-scanner
+
+# По умолчанию запускаем приложение
 CMD ["npm", "start"]

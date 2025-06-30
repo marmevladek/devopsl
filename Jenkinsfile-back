@@ -42,11 +42,11 @@ pipeline {
                 dir('backend-service') {
                     withSonarQubeEnv('SonarQubeServer') {
                         sh """
-                            sonar-scanner \
-                              -Dsonar.projectKey=devopsl-backend \
-                              -Dsonar.sources=src/main/java \
-                              -Dsonar.java.binaries=target/classes \
-                              -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                            mvn clean verify sonar:sonar \
+                              -Dsonar.projectKey=asdasd \
+                              -Dsonar.projectName='asdasd' \
+                              -Dsonar.host.url=http://localhost:30015 \
+                              -Dsonar.token=sqp_87485af380bcd9acfd35646c9e2d4927373d5927
                         """
                     }
                 }

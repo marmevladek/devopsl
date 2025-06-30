@@ -36,6 +36,28 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                dir('backend-service') {
+                    withSonarQubeEnv('SonarQubeServer') {
+                        sh """
+                            mvn clean verify sonar:sonar \
+                              -Dsonar.projectKey=devopsl-notify \
+                              -Dsonar.projectName='devopsl-notify'
+                        """
+                    }
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+
         stage('Build & Push Docker Image') {
             steps {
                 script {
@@ -70,9 +92,6 @@ pipeline {
                 script {
                     def KUBECONFIG = "/var/lib/jenkins/.kube/config"
 
-                    // Проверка наличия kubeconfig
-                    sh "ls -la ${KUBECONFIG} || true"
-
                     // Проверка соединения с кластером
                     sh """
                         echo "=== Проверяем соединение с кластером ==="
@@ -89,7 +108,7 @@ pipeline {
                     // Ждем окончания раскатки
                     sh """
                         echo "=== Ожидаем завершения rollout ==="
-                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/notification-service --timeout=120s || true
+                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/notification-service --timeout=120s
                     """
                 }
             }

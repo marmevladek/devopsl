@@ -3,7 +3,6 @@ pipeline {
     tools {                          // предварительно добавьте в «Global Tool Configuration»
         jdk   'jdk17'               // Temurin 17 (или другое имя, если задали своё)
         maven 'maven3'              // Maven 3.x
-        sonarQubeScanner 'SonarQubeScanner'
     }
 
     environment {
@@ -42,14 +41,11 @@ pipeline {
             steps {
                 dir('backend-service') {
                     withSonarQubeEnv('SonarQubeServer') {
-                        // Запускаем sonar-scanner CLI с параметрами
                         sh """
                             sonar-scanner \
                               -Dsonar.projectKey=devopsl-backend \
                               -Dsonar.sources=src/main/java \
                               -Dsonar.java.binaries=target/classes \
-                              -Dsonar.host.url=${SONAR_HOST_URL} \
-                              -Dsonar.login=${SONAR_TOKEN} \
                               -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                         """
                     }

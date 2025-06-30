@@ -38,7 +38,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                dir('backend-service') {
+                dir('notification-service') {
                     withSonarQubeEnv('SonarQubeServer') {
                         sh """
                             mvn clean verify sonar:sonar \

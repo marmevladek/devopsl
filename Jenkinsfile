@@ -86,6 +86,28 @@ pipeline {
                 }
             }
         }
+
+        stage('SonarQube Analysis') {
+            steps {
+                dir('front-service') {
+                    withSonarQubeEnv('SonarQubeServer') {
+                        sh """
+                            sonar-scanner \
+                              -Dsonar.projectKey=devopsl-frontend \
+                              -Dsonar.projectName='devopsl-frontend'
+                        """
+                    }
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
         
         stage('Build and Push Docker Image') {
             environment {
@@ -126,9 +148,6 @@ pipeline {
                     // Используем стандартный kubeconfig
                     def KUBECONFIG = "/var/lib/jenkins/.kube/config"
                     
-                    // Проверяем доступность конфига
-                    sh "ls -la ${KUBECONFIG} || true"
-                    
                     // Проверка соединения с кластером
                     sh """
                         echo "=== Проверяем соединение с кластером ==="
@@ -145,7 +164,7 @@ pipeline {
                     // Ожидаем завершения rollout
                     sh """
                         echo "=== Ожидаем завершения rollout ==="
-                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/front-service --timeout=120s || true
+                        kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/front-service --timeout=120s
                     """
                 }
             }
